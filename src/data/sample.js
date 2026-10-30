@@ -11,6 +11,7 @@ import { products } from "./products.js";
  */
 export const TAX_RATE = 0.0725; // NC 4.75% + Mecklenburg County 2.5%
 export const ZIP = "28223";
+export const CITY = "Charlotte, NC";
 export const DEMO_BUDGET = 25;
 
 /**
@@ -31,7 +32,30 @@ const short = {
   "laser-kit": "laser kit", "wrap-fish": "fish wrapping paper",
 };
 
-export const items = products.map((p) => ({ ...p, deal: deals[p.id] ?? { type: "everyday" }, short: short[p.id] ?? p.name }));
+/**
+ * Rupak's delivery badges. "Local" = the listing carried Temu's "Local Warehouse" tag on Oct 30, 2026.
+ * Ranges are from Rupak's design concept.
+ */
+const LOCAL = { local: true, label: "Local delivery available", ships: "1–3 days", delivers: "3–7 days" };
+const OVERSEAS = { local: false, label: "Ships from overseas", ships: "5–10 days", delivers: "10–20 days" };
+const localIds = new Set(["tee-black-3pk", "tee-cotton", "tee-black", "laser-green", "laser-kit", "laser-pro"]);
+
+/**
+ * Rupak's eligibility labels, tied to the demo's real coupons (see `coupons` below) so labels,
+ * cart and checkout agree. eligible = green, not = blue, new = orange.
+ */
+const ELIGIBLE = { status: "eligible", label: "Eligible for $2 off", detail: "SAVE2: $2 off orders over $20. Applied at checkout with Auto-apply." };
+const NOT_ELIGIBLE = { status: "not", label: "Not eligible for discount", detail: "Clearance items are already at their lowest price and are excluded from coupons." };
+const NEW_ONLY = { status: "new", label: "New users only", detail: "NEW10: $10 off orders over $60, first order on a new account only." };
+const eligibility = { "wrap-cow": NOT_ELIGIBLE, "laser-pro": NOT_ELIGIBLE, "case-duck": NEW_ONLY, "tee-basic": NEW_ONLY, "wrap-chicken": NEW_ONLY };
+
+export const items = products.map((p) => ({
+  ...p,
+  deal: deals[p.id] ?? { type: "everyday" },
+  short: short[p.id] ?? p.name,
+  delivery: { ...(localIds.has(p.id) ? LOCAL : OVERSEAS), ...(p.delivery ?? {}) },
+  eligibility: eligibility[p.id] ?? ELIGIBLE,
+}));
 export const byId = Object.fromEntries(items.map((i) => [i.id, i]));
 
 export const cart = ["case-polka", "tee-black-3pk", "laser-green", "wrap-fish"].map((id) => byId[id]);

@@ -24,11 +24,11 @@ Split by screen. Each person owns their screen's folder; everything is designed 
 |---|---|---|
 | `src/components/dylan` | Dylan | **OnboardingSplash** (first-use splash: ZIP, budget, deals toggle), **Cart** (popout and full-screen modes, budget line), **Checkout** (order summary with Rupak's auto-apply coupons button) |
 | `src/components/aniah` | Aniah | **NavBar**, **FilterSortBar** (same filters on every page), **QRCodeDeals** (QR-code deals usable on the website), RecentlyViewed |
-| `src/components/rupak` | Rupak | **SearchResults** page (starts with the price-and-shipping ProductTile), DeliveryEstimate, PurchaseCount, EligibilityLabel |
-| `src/components/jelani` | Jelani | **ProductDetails** page (starts with the PriceBlock), SeeMoreDetails, SectionBlock, GamesRewardsTab |
+| `src/components/rupak` | Rupak | **SearchResults** page from his design concept: **ProductCard** with **EligibilityLabel** (green eligible / blue not eligible / orange new users only, with hover conditions) and **DeliveryBadge** (local vs overseas, before you click), plus the **EligibilityGuide** side panel. DeliveryBadge also appears on each line of Dylan's cart. |
+| `src/components/jelani` | Jelani | **ProductDetails** page built from his design concept sketch (drop-down boxes, large rating, color-coded price, item metrics, shipping with stipulations, independent-scrolling reviews), SeeMoreDetails, SectionBlock, GamesRewardsTab |
 | `src/shared` | everyone | Button, Pill, Card, **DealLabel** (the three deal types, so every screen shows deals the same way) |
 
-Aniah's, Rupak's and Jelani's folders start as stubs or starter layouts with your ideas from our ideation session in the comment at the top. Replace them however you like. The ProductTile and PriceBlock in Rupak's and Jelani's folders came from Dylan's price ideas; they're yours now.
+Design concept sketches and mockups are in `reference/concepts/`. Aniah's folder starts as stubs or starter layouts with your ideas from our ideation session in the comment at the top. Replace them however you like. The PriceBlock in Jelani's folder came from Dylan's price ideas and is no longer used by his page.
 
 **How the screens connect** (see `src/main.jsx`): the NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. The OnboardingSplash appears on first load.
 

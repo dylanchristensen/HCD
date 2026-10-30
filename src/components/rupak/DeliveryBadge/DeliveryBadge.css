@@ -1,0 +1,8 @@
+.dlv { font-size: 12px; line-height: 1.45; background: var(--color-surface); border-radius: var(--radius-sm); padding: 6px 8px; color: var(--color-muted); }
+.dlv-head { font-weight: 600; color: var(--color-text); }
+.dlv.is-local { background: #eef8f0; }
+.dlv.is-local .dlv-head { color: var(--color-success); }
+[data-theme="wireframe"] .dlv.is-local { background: var(--color-surface); }
+[data-theme="wireframe"] .dlv.is-local .dlv-head { color: var(--color-text); }
+.dlv--cart { margin-top: 4px; }
+.dlv-note { font-size: 11px; }

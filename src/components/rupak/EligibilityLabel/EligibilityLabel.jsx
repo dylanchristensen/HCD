@@ -1,12 +1,19 @@
+import "./EligibilityLabel.css";
+
 /**
- * Owner: Rupak. Starter stub; replace freely.
- * Idea (from our ideation session): Clearer Eligibility Information: Simple Label to tell users if they are eligible for a discount before they click on it.
+ * Owner: Rupak. Discount eligibility label, from Rupak's design concept.
+ * Green = eligible, blue = not eligible (with a reason), orange = new users only.
+ * Hover or focus shows the conditions (minimum purchase, account eligibility, exclusions).
  */
-export function EligibilityLabel({ eligible = true, reason = "New customer offer" }) {
+const ICON = { eligible: "✓", not: "i", new: "!" };
+export function EligibilityLabel({ eligibility }) {
+  if (!eligibility) return null;
+  const { status, label, detail } = eligibility;
   return (
-    <div className="ui-stub">
-      {eligible ? "You qualify" : "Not eligible"}: {reason}
-      <div>TODO (Rupak): label design and where it appears.</div>
-    </div>
+    <span className={`elig elig--${status}`} tabIndex={0} aria-describedby={undefined}>
+      <span className="elig-icon" aria-hidden="true">{ICON[status]}</span>
+      <span className="elig-label">{label}</span>
+      {detail && <span className="elig-tip" role="tooltip">{detail}</span>}
+    </span>
   );
 }

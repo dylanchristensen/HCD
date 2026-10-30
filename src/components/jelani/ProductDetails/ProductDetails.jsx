@@ -41,7 +41,7 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
           <img className="pd-main" {...(item.gallery ? imageProps(item, shown) : imageProps(item))} alt={item.name} />
         </div>
 
-        <Disclosure className="pd-box" title={<b>Seller details</b>} summary={<span className="ui-muted">{item.seller?.shipsFrom ?? "Ships from Temu (US)"}</span>}>
+        <Disclosure className="pd-box" title={<b>Seller details</b>} summary={<span className="ui-muted">{item.seller?.shipsFrom ?? "Shipped by Temu"}</span>}>
           <p>{item.seller?.note ?? "Shipped and handled by Temu's US warehouse."}</p>
         </Disclosure>
 
@@ -122,7 +122,8 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
         <div className="pd-box pd-ship">
           <div className="pd-ship-title">Shipping and Delivery</div>
           <div>Shipping price: <ShippingPrice item={item} ship={ship} /></div>
-          {item.delivery && <div>Delivery from: <b className="pd-green">{item.delivery.from} to {item.delivery.to}</b></div>}
+          {item.delivery?.from && <div>Delivery from: <b className="pd-green">{item.delivery.from} to {item.delivery.to}</b></div>}
+          {item.delivery && !item.delivery.from && <div>Delivery: <b className="pd-green">{item.delivery.delivers}</b> <span className="ui-muted">({item.delivery.local ? "local warehouse" : "ships from overseas"})</span></div>}
           {item.guarantees && (
             <Disclosure title={<span className="pd-green"><b>Order guarantees</b></span>}
               summary={<div className="pd-guarantees">{item.guarantees.slice(0, 2).map((g) => <span key={g}>{g}</span>)}</div>}>

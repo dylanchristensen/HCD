@@ -1,6 +1,5 @@
 import { SearchResults } from "./SearchResults";
 import { items } from "../../../data/sample";
-export default { title: "Rupak/SearchResults", component: SearchResults };
-export const PhoneCases = { args: { query: "phone case", items: items.filter((i) => i.category === "Phone cases") } };
-export const AllDemoItems = { args: { query: "gifts", items } };
-export const DealsOff = { args: { query: "phone case", items: items.filter((i) => i.category === "Phone cases"), showDeals: false } };
+export default { title: "Rupak/SearchResults", component: SearchResults, parameters: { layout: "fullscreen" }, decorators: [(S) => <div style={{ padding: 24 }}><S /></div>] };
+export const AllDemoItems = { args: { query: "Recommended for you", items } };
+export const Tools = { args: { query: "Tools", items: items.filter((i) => i.category === "Tools") } };

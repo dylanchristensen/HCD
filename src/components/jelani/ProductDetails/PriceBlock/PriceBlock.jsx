@@ -18,7 +18,7 @@ export function PriceBlock({ item, taxRate, zip, cart = [], budget = null, showD
       <DealLabel deal={item.deal} showDeals={showDeals} detailed />
       <div className="pb-line">
         <b>{sellerShipped ? `+ ${money(lp.shipping)} shipping` : "Free shipping"}</b>
-        <Pill filled={!sellerShipped}>{sellerShipped ? "Seller-shipped" : "Ships from Temu (US)"}</Pill>
+        <Pill filled={!sellerShipped}>{sellerShipped ? "Seller-shipped" : "Shipped by Temu"}</Pill>
       </div>
       {sellerShipped && <div className="ui-muted">Shipping is free when every item in your order ships from Temu. This one ships from the seller.</div>}
       <div className="pb-line"><b>+ {money(lp.tax)} est. tax</b><span className="ui-muted">for {zip}</span></div>

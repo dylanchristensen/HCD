@@ -9,7 +9,7 @@ import { NavBar } from "./components/aniah/NavBar/NavBar";
 import { FilterSortBar } from "./components/aniah/FilterSortBar/FilterSortBar";
 import { SearchResults } from "./components/rupak/SearchResults/SearchResults";
 import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetails";
-import { items, byId, cart as demoCart, swaps, coupons, TAX_RATE, ZIP, DEMO_BUDGET } from "./data/sample";
+import { items, byId, cart as demoCart, swaps, coupons, TAX_RATE, ZIP, CITY, DEMO_BUDGET } from "./data/sample";
 
 /**
  * The assembled site: everyone's screens wired together so we can click through the whole flow.
@@ -21,10 +21,10 @@ function App() {
   const [prefs, setPrefs] = useState({ zip: ZIP, budget: DEMO_BUDGET, showDeals: true });
   const [cart, setCart] = useState(demoCart);
   const [product, setProduct] = useState(byId["laser-green"]);
-  const [query, setQuery] = useState("Phone cases");
+  const [query, setQuery] = useState("Recommended for you");
   const swap = (from, to) => setCart((c) => c.map((i) => (i.id === from ? byId[to] : i)));
   const addToCart = (item) => { setCart((c) => (c.find((i) => i.id === item.id) ? c : [...c, item])); setPopout(true); };
-  const cartProps = { cart, swaps, catalog: byId, onSwap: swap };
+  const cartProps = { cart, swaps, catalog: byId, onSwap: swap, city: CITY };
   const [splash, setSplash] = useState(true);
   const [page, setPage] = useState("search");
   const [popout, setPopout] = useState(false);
@@ -53,11 +53,11 @@ function App() {
         {page === "search" && (<>
           <FilterSortBar />
           <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
-            {["Phone cases", "T-shirts", "Tools", "Gift wrap"].map((c) => (
+            {["Recommended for you", "Phone cases", "T-shirts", "Tools", "Gift wrap"].map((c) => (
               <button key={c} className="ui-btn ui-btn--ghost" style={{ padding: "4px 12px", fontWeight: c === query ? 800 : 400 }} onClick={() => setQuery(c)}>{c}</button>
             ))}
           </div>
-          <SearchResults query={query} items={items.filter((i) => i.category === query)} showDeals={prefs.showDeals} onOpen={(i) => { setProduct(i); setPage("product"); }} />
+          <SearchResults query={query} items={query === "Recommended for you" ? items : items.filter((i) => i.category === query)} showDeals={prefs.showDeals} onOpen={(i) => { setProduct(i); setPage("product"); }} />
         </>)}
         {page === "product" && <ProductDetails item={product} showDeals={prefs.showDeals} onAddToCart={addToCart} />}
         {page === "cart" && <Cart mode="fullscreen" {...cartProps} {...common} onCheckout={() => setPage("checkout")} onClose={() => setPage("search")} />}

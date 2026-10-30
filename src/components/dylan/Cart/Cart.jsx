@@ -1,6 +1,7 @@
 import { Button, Pill } from "../../../shared";
 import { cartTotals, money, sellerShippingFor } from "../../../lib/price";
 import { imageProps } from "../../../data/products";
+import { DeliveryBadge } from "../../rupak/DeliveryBadge/DeliveryBadge";
 import "./Cart.css";
 
 /**
@@ -10,7 +11,7 @@ import "./Cart.css";
  * Both show per-line shipping and deal status, the full breakdown before any address,
  * "You'll pay" as the total's label, the budget line, and why shipping isn't free. No timers.
  */
-export function Cart({ mode = "popout", cart, taxRate, zip, budget = null, showDeals = true, swaps = {}, catalog = {},
+export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = null, showDeals = true, swaps = {}, catalog = {},
   onCheckout = () => {}, onSwap = () => {}, onExpand = () => {}, onClose = () => {} }) {
   const t = cartTotals(cart, taxRate, budget);
   const seller = cart.filter((i) => sellerShippingFor(i) > 0);
@@ -24,10 +25,11 @@ export function Cart({ mode = "popout", cart, taxRate, zip, budget = null, showD
           <div className="cart-info">
             <div>{i.name}</div>
             <div className="cart-meta">
-              <Pill filled={i.shipsFrom !== "seller"}>{i.shipsFrom === "seller" ? "Seller-shipped" : "Temu (US)"}</Pill>
+              <Pill filled={i.shipsFrom !== "seller"}>{i.shipsFrom === "seller" ? "Seller-shipped" : "Shipped by Temu"}</Pill>
               <span className="ui-muted">{sellerShippingFor(i) > 0 ? `+ ${money(sellerShippingFor(i))} shipping` : "free shipping"}</span>
             </div>
             {showDeals && i.deal?.type === "lightning" && <div className="ui-muted">Lightning price, held until {i.deal.endsAt}</div>}
+            <DeliveryBadge delivery={i.delivery} variant="cart" />
           </div>
           <div className="ui-money">{money(i.price)}</div>
         </li>
@@ -42,6 +44,7 @@ export function Cart({ mode = "popout", cart, taxRate, zip, budget = null, showD
         <div className="ui-row"><span>Shipping {t.sellerShippedCount > 0 && <span className="ui-muted">({t.sellerShippedCount} seller-shipped)</span>}</span><span>{money(t.shipping)}</span></div>
         <div className="ui-row"><span>Est. tax <span className="ui-muted">({zip})</span></span><span>{money(t.tax)}</span></div>
         <div className="ui-row cart-total"><span>You'll pay</span><span className="ui-money">{money(t.total)}</span></div>
+        <div className="ui-row ui-muted cart-deliver"><span>📍 Deliver to: {city ? `${city} ` : ""}{zip}</span><span>Change</span></div>
       </div>
       {budget != null && (
         <div className="cart-budget">
