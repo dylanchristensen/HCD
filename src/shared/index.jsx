@@ -1,3 +1,5 @@
+export { DealLabel } from "./DealLabel/DealLabel";
+
 /** Small building blocks shared by everyone. Keep them dumb: no business logic here. */
 export function Button({ variant = "primary", children, ...props }) {
   return <button className={`ui-btn ui-btn--${variant}`} {...props}>{children}</button>;

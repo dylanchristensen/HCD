@@ -1,9 +1,11 @@
-import { Pill } from "../../../shared";
-import { DealLabel } from "../DealLabel/DealLabel";
-import { money } from "../../../lib/price";
+import { Pill, DealLabel } from "../../../../shared";
+import { money } from "../../../../lib/price";
 import "./ProductTile.css";
 
-/** Search result tile: all-in price line, shipping source badge, deal label, "You'd pay" footer. */
+/**
+ * Owner: Rupak (search results page). Starting point carried over from Dylan's price ideas:
+ * all-in price line, shipping source badge, deal label, "You'd pay" footer. Change freely.
+ */
 export function ProductTile({ item, showDeals = true, image }) {
   const sellerShipped = item.shipsFrom === "seller";
   const youPay = item.price + (sellerShipped ? item.sellerShipping : 0);

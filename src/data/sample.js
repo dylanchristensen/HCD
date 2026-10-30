@@ -17,3 +17,9 @@ export const items = [
 ];
 
 export const cart = items.filter((i) => ["case", "tee", "level"].includes(i.id));
+
+/** Coupons on the account. With the sample cart ($22.16) only SAVE3 qualifies. */
+export const coupons = [
+  { code: "SAVE3", label: "$3 off orders over $20", amount: 3, minOrder: 20 },
+  { code: "NEW15", label: "15% off orders over $60", percent: 15, minOrder: 60 },
+];

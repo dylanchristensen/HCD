@@ -1,5 +1,0 @@
-.cs { width: 340px; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; background: var(--color-bg); box-shadow: var(--shadow); }
-.cs-title { margin: 0 0 6px; }
-.cs-total { border-top: var(--border-width) solid var(--color-border); padding-top: 8px; font-size: 18px; font-weight: 800; }
-.cs-match { background: var(--color-surface); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; margin-top: 6px; }
-.cs-note { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; margin-bottom: 6px; }

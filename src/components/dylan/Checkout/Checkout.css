@@ -1,0 +1,8 @@
+.co { width: 360px; max-width: 100%; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; background: var(--color-bg); box-shadow: var(--shadow); color: var(--color-text); }
+.co-title { margin: 0 0 6px; }
+.co-discount { color: var(--color-accent); font-weight: 700; }
+[data-theme="wireframe"] .co-discount { color: var(--color-text); }
+.co-total { border-top: var(--border-width) solid var(--color-border); padding-top: 8px; font-size: 18px; font-weight: 800; }
+.co-coupons { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 2px; font-size: 13px; }
+.co-match { background: var(--color-surface); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; margin-top: 6px; }
+.co-note { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; margin-bottom: 6px; }

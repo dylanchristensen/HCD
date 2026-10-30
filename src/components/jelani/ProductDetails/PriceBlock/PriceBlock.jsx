@@ -1,12 +1,12 @@
-import { Pill } from "../../../shared";
-import { DealLabel } from "../DealLabel/DealLabel";
-import { landedPrice, cartTotals, money } from "../../../lib/price";
+import { Pill, DealLabel } from "../../../../shared";
+import { landedPrice, cartTotals, money } from "../../../../lib/price";
 import "./PriceBlock.css";
 
 /**
+ * Owner: Jelani (product details page). Starting point carried over from Dylan's price ideas. Change freely.
  * Product page price block: item price alone, the deal stated, shipping with its reason,
  * estimated tax from the ZIP, "You'd pay", and a budget check against the current cart.
- * Delivery dates are deliberately absent: Rupak's DeliveryEstimate covers them.
+ * Delivery dates: Rupak's DeliveryEstimate can sit next to this.
  */
 export function PriceBlock({ item, taxRate, zip, cart = [], budget = null, showDeals = true }) {
   const lp = landedPrice(item, taxRate);

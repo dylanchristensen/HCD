@@ -1,6 +1,6 @@
 import { ProductTile } from "./ProductTile";
-import { items } from "../../../data/sample";
-export default { title: "Dylan/ProductTile", component: ProductTile };
+import { items } from "../../../../data/sample";
+export default { title: "Rupak/SearchResults/ProductTile", component: ProductTile };
 export const TemuShipped = { args: { item: items[0] } };
 export const SellerShipped = { args: { item: items[3] } };
 export const DealsOff = { args: { item: items[0], showDeals: false } };

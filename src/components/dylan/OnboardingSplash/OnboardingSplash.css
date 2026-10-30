@@ -1,0 +1,9 @@
+.splash-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.45); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 100; }
+.splash { width: 100%; max-width: 440px; background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 24px; color: var(--color-text); }
+.splash-title { margin: 0 0 4px; font-size: 22px; }
+.splash-field { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; font-weight: 700; font-size: 14px; }
+.splash-field .ui-field { max-width: 200px; font-weight: 400; }
+.splash-field .ui-muted { font-weight: 400; }
+.splash-toggle { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 14px; }
+.splash-actions { display: flex; gap: 16px; align-items: center; margin-top: 20px; }
+.splash-foot { margin: 12px 0 0; }

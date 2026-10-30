@@ -11,21 +11,26 @@ You need [Node.js](https://nodejs.org) 18 or newer.
 ```bash
 npm install
 npm run storybook   # component workshop at http://localhost:6006
-npm run dev         # assembled screens at http://localhost:5173
+npm run dev         # the whole site clicked through, at http://localhost:5173
 ```
 
 In Storybook, the **Theme** button in the toolbar switches between Wireframe and Temu skin.
 
 ## Who owns what
 
-| Folder | Owner | Components | Idea source |
-|---|---|---|---|
-| `src/components/dylan` | Dylan | FirstVisitCard, DealLabel, ProductTile, PriceBlock, CartDrawer, CheckoutSummary | ZIP at start; price and shipping under items; budget; three deal types; end dates instead of timers; deals toggle |
-| `src/components/rupak` | Rupak | DeliveryEstimate, PurchaseCount, EligibilityLabel | Delivery before you click; purchase counts; discount eligibility label |
-| `src/components/aniah` | Aniah | FilterSortBar, RecentlyViewed, CouponPopup | Filter/sort on every page; recently viewed instead of new tabs; coupon pop-ups for web and mobile |
-| `src/components/jelani` | Jelani | SeeMoreDetails, GamesRewardsTab, SectionBlock | See-more drop-downs; Games and Rewards tab; visual hierarchy |
+Split by screen. Each person owns their screen's folder; everything is designed in the wireframe theme first.
 
-Rupak's, Aniah's and Jelani's folders start as stubs: a placeholder component with your idea in the comment at the top. Replace them however you like.
+| Folder | Owner | Screens and components |
+|---|---|---|
+| `src/components/dylan` | Dylan | **OnboardingSplash** (first-use splash: ZIP, budget, deals toggle), **Cart** (popout and full-screen modes, budget line), **Checkout** (order summary with Rupak's auto-apply coupons button) |
+| `src/components/aniah` | Aniah | **NavBar**, **FilterSortBar** (same filters on every page), **QRCodeDeals** (QR-code deals usable on the website), RecentlyViewed |
+| `src/components/rupak` | Rupak | **SearchResults** page (starts with the price-and-shipping ProductTile), DeliveryEstimate, PurchaseCount, EligibilityLabel |
+| `src/components/jelani` | Jelani | **ProductDetails** page (starts with the PriceBlock), SeeMoreDetails, SectionBlock, GamesRewardsTab |
+| `src/shared` | everyone | Button, Pill, Card, **DealLabel** (the three deal types, so every screen shows deals the same way) |
+
+Aniah's, Rupak's and Jelani's folders start as stubs or starter layouts with your ideas from our ideation session in the comment at the top. Replace them however you like. The ProductTile and PriceBlock in Rupak's and Jelani's folders came from Dylan's price ideas; they're yours now.
+
+**How the screens connect** (see `src/main.jsx`): the NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. The OnboardingSplash appears on first load.
 
 ## Adding a component
 
