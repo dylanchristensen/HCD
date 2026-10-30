@@ -43,6 +43,7 @@ export const products = [
   p("laser-pro", "fancy/de8dabaf-def1-4f03-afed-15603bfedea6.jpg", { name: "Self-Leveling Green Cross Line Laser with Light Adjustment", category: "Tools", price: 21.27, originalPrice: 50.99, sold: "140", rating: 4.7, shipsFrom: "seller", sellerShipping: 2.99, sellerFreeOver: 30 }),
 
   // gift wrap (search: "christmas wrapping paper")
+  p("wrap-fish", "open/bb2c6ac5681b4357afc1bda9bf64d556-goods.jpeg", { name: "Christmas Fish Wrapping Paper Roll, 17.7 x 118 in", category: "Gift wrap", price: 4.27, originalPrice: 11.64, sold: "1K+", rating: 4.8, shipsFrom: "temu", sellerShipping: 0 }),
   p("wrap-dogs", "open/41f0a8f010af42959b5a1446e316d31e-goods.jpeg", { name: "Dog Christmas Wrapping Paper Roll, 17.7 x 118 in", category: "Gift wrap", price: 4.17, originalPrice: 10.96, sold: "4.7K+", rating: 4.8, shipsFrom: "temu", sellerShipping: 0 }),
   p("wrap-santa", "fancy/4ba7a64f-40a8-42f9-8c4b-15f6ddc0336a.jpg", { name: "5pcs Christmas Gift Wrapping Paper, Santa and Reindeer", category: "Gift wrap", price: 4.94, originalPrice: 9.44, sold: "15K+", rating: 4.7, shipsFrom: "temu", sellerShipping: 0 }),
   p("wrap-cow", "fancy/5272cb84-3d12-4d0d-ba51-73d207b2c09e.jpg", { name: "Highland Cow Christmas Wrapping Paper Roll", category: "Gift wrap", price: 3.46, originalPrice: 12.99, sold: "15K+", rating: 4.8, shipsFrom: "temu", sellerShipping: 0 }),

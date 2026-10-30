@@ -1,4 +1,7 @@
 import { ProductDetails } from "./ProductDetails";
-import { items, cart, TAX_RATE, ZIP } from "../../../data/sample";
+import { byId, cart, TAX_RATE, ZIP, DEMO_BUDGET } from "../../../data/sample";
 export default { title: "Jelani/ProductDetails", component: ProductDetails, argTypes: { onAddToCart: { action: "addToCart" } } };
-export const Default = { args: { item: items[2], taxRate: TAX_RATE, zip: ZIP, cart: cart.filter((c) => c.id !== "level"), budget: 30 } };
+const base = { taxRate: TAX_RATE, zip: ZIP, budget: DEMO_BUDGET, cart: cart.filter((c) => c.id !== "laser-green") };
+/** The demo's laser level, with Temu's real gallery and seller shipping rule. */
+export const LaserLevel = { args: { ...base, item: byId["laser-green"] } };
+export const PhoneCase = { args: { ...base, item: byId["case-polka"] } };

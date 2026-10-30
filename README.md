@@ -60,7 +60,7 @@ Use them with `<img {...imageProps(product)} alt={product.name} />`. Until you'v
 - **Colors, fonts, borders and radii come from `src/theme/tokens.css`**, via `var(--color-accent)` and friends. Don't hard-code hex colors in components.
 - **Shared pieces** (Button, Pill, Card) live in `src/shared`. Use them instead of styling your own buttons.
 - **Money math** lives in `src/lib/price.js`. If your component shows a price or total, use `landedPrice` / `cartTotals` so everyone's numbers agree.
-- **Sample data** is in `src/data/sample.js`. The cart reproduces a real session from our study (subtotal $22.16, shipping $6.00, tax $2.31, total $30.47).
+- **Demo data** is in `src/data/sample.js`, built on the real Temu listings in `products.js`. The demo cart is the polka-dot phone case, 3-pack tees, the green laser level (seller-shipped, $2.99) and the Christmas fish wrapping paper: $22.55 + $2.99 shipping + $1.85 tax (7.25%, ZIP 28223) = **$27.39**, against a **$25** budget. Swapping the laser level for the Temu-shipped laser kit brings it to $19.23; auto-applying SAVE2 at checkout brings it to $25.25. Use these items in every screen so the demo is consistent.
 
 ## The Temu coat of paint (end of project)
 

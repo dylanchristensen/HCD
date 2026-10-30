@@ -9,7 +9,7 @@ import { NavBar } from "./components/aniah/NavBar/NavBar";
 import { FilterSortBar } from "./components/aniah/FilterSortBar/FilterSortBar";
 import { SearchResults } from "./components/rupak/SearchResults/SearchResults";
 import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetails";
-import { items, cart, coupons, TAX_RATE, ZIP } from "./data/sample";
+import { items, byId, cart as demoCart, swaps, coupons, TAX_RATE, ZIP, DEMO_BUDGET } from "./data/sample";
 
 /**
  * The assembled site: everyone's screens wired together so we can click through the whole flow.
@@ -18,7 +18,13 @@ import { items, cart, coupons, TAX_RATE, ZIP } from "./data/sample";
  */
 function App() {
   const [theme, setTheme] = useState("wireframe");
-  const [prefs, setPrefs] = useState({ zip: ZIP, budget: 30, showDeals: true });
+  const [prefs, setPrefs] = useState({ zip: ZIP, budget: DEMO_BUDGET, showDeals: true });
+  const [cart, setCart] = useState(demoCart);
+  const [product, setProduct] = useState(byId["laser-green"]);
+  const [query, setQuery] = useState("Phone cases");
+  const swap = (from, to) => setCart((c) => c.map((i) => (i.id === from ? byId[to] : i)));
+  const addToCart = (item) => { setCart((c) => (c.find((i) => i.id === item.id) ? c : [...c, item])); setPopout(true); };
+  const cartProps = { cart, swaps, catalog: byId, onSwap: swap };
   const [splash, setSplash] = useState(true);
   const [page, setPage] = useState("search");
   const [popout, setPopout] = useState(false);
@@ -32,6 +38,7 @@ function App() {
           <button key={p} className="ui-btn ui-btn--ghost" style={{ padding: "4px 10px" }} onClick={() => { setPage(p); setPopout(false); }}>{p}</button>
         ))}
         <button className="ui-btn ui-btn--ghost" style={{ padding: "4px 10px" }} onClick={() => setSplash(true)}>show onboarding</button>
+        <button className="ui-btn ui-btn--ghost" style={{ padding: "4px 10px" }} onClick={() => { setCart(demoCart); setPrefs({ zip: ZIP, budget: DEMO_BUDGET, showDeals: true }); setPage("search"); setPopout(false); setSplash(true); }}>reset demo</button>
         <select value={theme} onChange={(e) => setTheme(e.target.value)}>
           <option value="wireframe">Wireframe</option>
           <option value="temu">Temu skin</option>
@@ -43,15 +50,23 @@ function App() {
       </div>
 
       <div style={{ padding: "0 16px 32px" }}>
-        {page === "search" && (<><FilterSortBar /><div style={{ height: 16 }} /><SearchResults items={items} showDeals={prefs.showDeals} /></>)}
-        {page === "product" && <ProductDetails item={items[2]} {...common} cart={cart.filter((c) => c.id !== "level")} onAddToCart={() => setPopout(true)} />}
-        {page === "cart" && <Cart mode="fullscreen" cart={cart} {...common} onCheckout={() => setPage("checkout")} onClose={() => setPage("search")} />}
+        {page === "search" && (<>
+          <FilterSortBar />
+          <div style={{ display: "flex", gap: 8, margin: "12px 0" }}>
+            {["Phone cases", "T-shirts", "Tools", "Gift wrap"].map((c) => (
+              <button key={c} className="ui-btn ui-btn--ghost" style={{ padding: "4px 12px", fontWeight: c === query ? 800 : 400 }} onClick={() => setQuery(c)}>{c}</button>
+            ))}
+          </div>
+          <SearchResults query={query} items={items.filter((i) => i.category === query)} showDeals={prefs.showDeals} onOpen={(i) => { setProduct(i); setPage("product"); }} />
+        </>)}
+        {page === "product" && <ProductDetails item={product} {...common} cart={cart.filter((c) => c.id !== product.id)} onAddToCart={addToCart} />}
+        {page === "cart" && <Cart mode="fullscreen" {...cartProps} {...common} onCheckout={() => setPage("checkout")} onClose={() => setPage("search")} />}
         {page === "checkout" && <Checkout cart={cart} {...common} coupons={coupons} />}
       </div>
 
       {popout && (
         <div style={{ position: "fixed", top: 16, right: 16, zIndex: 50 }}>
-          <Cart mode="popout" cart={cart} {...common}
+          <Cart mode="popout" {...cartProps} {...common}
             onCheckout={() => { setPopout(false); setPage("checkout"); }}
             onExpand={() => { setPopout(false); setPage("cart"); }}
             onClose={() => setPopout(false)} />

@@ -1,9 +1,9 @@
 import { ProductTile } from "./ProductTile";
-import { items } from "../../../../data/sample";
+import { items, byId } from "../../../../data/sample";
 export default { title: "Rupak/SearchResults/ProductTile", component: ProductTile };
-export const TemuShipped = { args: { item: items[0] } };
-export const SellerShipped = { args: { item: items[3] } };
-export const DealsOff = { args: { item: items[0], showDeals: false } };
+export const TemuShipped = { args: { item: byId["case-polka"] } };
+export const SellerShipped = { args: { item: byId["laser-green"] } };
+export const DealsOff = { args: { item: byId["case-polka"], showDeals: false } };
 export const ResultsRow = {
-  render: () => <div style={{ display: "flex", gap: 16 }}>{items.map((i) => <ProductTile key={i.id} item={i} />)}</div>,
+  render: () => <div style={{ display: "flex", gap: 16 }}>{items.slice(0, 6).map((i) => <ProductTile key={i.id} item={i} />)}</div>,
 };

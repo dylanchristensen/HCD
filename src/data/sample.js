@@ -1,25 +1,49 @@
+import { products } from "./products.js";
+
 /**
- * Sample data. The cart reproduces session D-1's real checkout on Oct 1, 2026:
- * subtotal $22.16, shipping $6.00, tax $2.31, total $30.47.
+ * The demo scenario. Every item is a real Temu listing (src/data/products.js, collected Oct 30, 2026).
+ *
+ * Demo cart: polka-dot case $1.85 + 3-pack tees $5.80 + laser level $10.63 (seller-shipped, $2.99)
+ * + Christmas fish wrapping paper $4.27 = $22.55 items, $2.99 shipping, 7.25% tax (Charlotte, NC 28223)
+ * = $27.39. Demo budget $25, so the cart starts $2.39 over. Swapping the laser level for the
+ * Temu-shipped laser kit ($6.01) removes the shipping and brings the total to $19.23.
+ * At checkout, auto-applying SAVE2 instead takes $27.39 to $25.25.
  */
-export const TAX_RATE = 0.0819; // 2.31 / (22.16 + 6.00), rounded
+export const TAX_RATE = 0.0725; // NC 4.75% + Mecklenburg County 2.5%
 export const ZIP = "28223";
+export const DEMO_BUDGET = 25;
 
-export const items = [
-  { id: "case", name: "Polka-dot case, iPhone 16 Plus", price: 3.49, shipsFrom: "temu", sellerShipping: 0,
-    deal: { type: "lightning", endsAt: "Tue 3:00 pm", regularPrice: 4.99 }, rating: 4.5, sold: 1021 },
-  { id: "tee", name: "Basic tee, 2X, navy", price: 8.69, shipsFrom: "temu", sellerShipping: 0,
-    deal: { type: "everyday" }, rating: 4.3, sold: 340 },
-  { id: "level", name: "2-line cross laser level", price: 9.98, shipsFrom: "seller", sellerShipping: 6.0,
-    deal: { type: "lightning", endsAt: "Tue, Oct 28, 3:00 pm", regularPrice: 12.5 }, rating: 4.6, sold: 1204 },
-  { id: "folio", name: "Leather folio case", price: 7.2, shipsFrom: "seller", sellerShipping: 5.98,
-    deal: { type: "clearance", left: 12 }, rating: 4.1, sold: 88 },
-];
+/**
+ * Deal labels for the demo, in our three-type system. On Temu these items carried "LAST DAY",
+ * "ALMOST SOLD OUT" and countdowns; here each gets one stated label instead.
+ */
+const deals = {
+  "case-polka": { type: "lightning", endsAt: "Tue 3:00 pm", regularPrice: 17.99 },
+  "case-duck": { type: "lightning", endsAt: "Tue 3:00 pm", regularPrice: 5.73 },
+  "laser-green": { type: "clearance", left: 12 },
+  "laser-kit": { type: "everyday" },
+  "wrap-cow": { type: "clearance", left: 40 },
+};
 
-export const cart = items.filter((i) => ["case", "tee", "level"].includes(i.id));
+/** Short names for tight spaces (cart explanation, budget line). */
+const short = {
+  "case-polka": "polka-dot case", "tee-black-3pk": "3-pack tees", "laser-green": "laser level",
+  "laser-kit": "laser kit", "wrap-fish": "fish wrapping paper",
+};
 
-/** Coupons on the account. With the sample cart ($22.16) only SAVE3 qualifies. */
+export const items = products.map((p) => ({ ...p, deal: deals[p.id] ?? { type: "everyday" }, short: short[p.id] ?? p.name }));
+export const byId = Object.fromEntries(items.map((i) => [i.id, i]));
+
+export const cart = ["case-polka", "tee-black-3pk", "laser-green", "wrap-fish"].map((id) => byId[id]);
+
+/** The swap the cart offers when shipping or budget is the problem. */
+export const swaps = { "laser-green": "laser-kit" };
+
+/**
+ * Coupons. NEW10 is the real offer Temu's homepage pop-up showed on Oct 30, 2026
+ * ("$10 OFF on orders over $60"). SAVE2 is a demo coupon so the auto-apply button has something to apply.
+ */
 export const coupons = [
-  { code: "SAVE3", label: "$3 off orders over $20", amount: 3, minOrder: 20 },
-  { code: "NEW15", label: "15% off orders over $60", percent: 15, minOrder: 60 },
+  { code: "SAVE2", label: "$2 off orders over $20", amount: 2, minOrder: 20 },
+  { code: "NEW10", label: "$10 off orders over $60", amount: 10, minOrder: 60 },
 ];

@@ -1,5 +1,6 @@
 import { Button, Pill } from "../../../shared";
-import { cartTotals, money } from "../../../lib/price";
+import { cartTotals, money, sellerShippingFor } from "../../../lib/price";
+import { imageProps } from "../../../data/products";
 import "./Cart.css";
 
 /**
@@ -9,21 +10,22 @@ import "./Cart.css";
  * Both show per-line shipping and deal status, the full breakdown before any address,
  * "You'll pay" as the total's label, the budget line, and why shipping isn't free. No timers.
  */
-export function Cart({ mode = "popout", cart, taxRate, zip, budget = null, showDeals = true,
-  onCheckout = () => {}, onSwaps = () => {}, onExpand = () => {}, onClose = () => {} }) {
+export function Cart({ mode = "popout", cart, taxRate, zip, budget = null, showDeals = true, swaps = {}, catalog = {},
+  onCheckout = () => {}, onSwap = () => {}, onExpand = () => {}, onClose = () => {} }) {
   const t = cartTotals(cart, taxRate, budget);
-  const seller = cart.filter((i) => i.shipsFrom === "seller");
+  const seller = cart.filter((i) => sellerShippingFor(i) > 0);
+  const swap = seller.map((i) => swaps[i.id] && catalog[swaps[i.id]] ? { from: i, to: catalog[swaps[i.id]] } : null).find(Boolean);
 
   const lines = (
     <ul className="cart-lines">
       {cart.map((i) => (
         <li key={i.id} className="cart-line">
-          <div className="cart-thumb" />
+          <div className="cart-thumb">{i.img && <img {...imageProps(i)} alt="" />}</div>
           <div className="cart-info">
             <div>{i.name}</div>
             <div className="cart-meta">
               <Pill filled={i.shipsFrom !== "seller"}>{i.shipsFrom === "seller" ? "Seller-shipped" : "Temu (US)"}</Pill>
-              <span className="ui-muted">{i.shipsFrom === "seller" ? `+ ${money(i.sellerShipping)} shipping` : "free shipping"}</span>
+              <span className="ui-muted">{sellerShippingFor(i) > 0 ? `+ ${money(sellerShippingFor(i))} shipping` : "free shipping"}</span>
             </div>
             {showDeals && i.deal?.type === "lightning" && <div className="ui-muted">Lightning price, held until {i.deal.endsAt}</div>}
           </div>
@@ -46,14 +48,15 @@ export function Cart({ mode = "popout", cart, taxRate, zip, budget = null, showD
           <b>{t.overBudget > 0 ? `${money(t.overBudget)} over your ${money(budget)} budget` : `${money(-t.overBudget)} under your ${money(budget)} budget`}</b>
           <div className="cart-bar"><div style={{ width: `${Math.min(100, (t.total / budget) * 100)}%` }} /></div>
           {t.overBudget > 0 && (
-            <div className="cart-actions"><Button variant="ghost" onClick={onSwaps}>Show cheaper swaps</Button><Button variant="ghost">Keep going</Button></div>
+            <div className="cart-actions">{swap && <Button variant="ghost" onClick={() => onSwap(swap.from.id, swap.to.id)}>Swap {swap.from.short} for {swap.to.short} ({money(swap.to.price)})</Button>}<Button variant="ghost">Keep going</Button></div>
           )}
         </div>
       )}
       {seller.length > 0 && (
         <div className="cart-explain">
-          Shipping is {money(t.shipping)} because {seller.map((s) => s.name.toLowerCase()).join(" and ")} {seller.length > 1 ? "ship" : "ships"} from a seller.
-          Swap for Temu-shipped items and shipping drops to $0.
+          Shipping is {money(t.shipping)} because the {seller.map((s) => s.short).join(" and ")} {seller.length > 1 ? "ship" : "ships"} from a seller
+          {seller[0]?.sellerFreeOver ? ` (free from that seller over ${money(seller[0].sellerFreeOver)})` : ""}.
+          {swap ? ` The ${swap.to.short} ships from Temu for free.` : " Temu-shipped items ship free."}
         </div>
       )}
       <Button onClick={onCheckout}>Checkout · {money(t.total)}</Button>

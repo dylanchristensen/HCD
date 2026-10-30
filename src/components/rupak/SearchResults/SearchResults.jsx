@@ -7,14 +7,14 @@ import { PurchaseCount } from "../PurchaseCount/PurchaseCount";
  * Ideas from our session: delivery estimate and purchase count before you click an item,
  * discount eligibility label. Aniah's FilterSortBar sits above this on the assembled page.
  */
-export function SearchResults({ query = "phone case", items = [], showDeals = true }) {
+export function SearchResults({ query = "phone case", items = [], showDeals = true, onOpen = () => {} }) {
   return (
     <section>
       <h2 style={{ margin: "0 0 12px" }}>Results for "{query}"</h2>
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
         {items.map((i) => (
           <div key={i.id} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            <ProductTile item={i} showDeals={showDeals} />
+            <ProductTile item={i} showDeals={showDeals} onOpen={() => onOpen(i)} />
             <PurchaseCount sold={i.sold} />
           </div>
         ))}
