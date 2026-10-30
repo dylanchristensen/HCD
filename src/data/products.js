@@ -38,6 +38,25 @@ export const products = [
     ],
     // What Temu's real page says about shipping for this item:
     shippingNote: "Standard: $2.99 or FREE (if ordering $30.00+ from this seller). Fastest delivery in 2 business days.",
+    // Product page details, from Temu's real listing on Oct 30, 2026 (used by Jelani's ProductDetails):
+    description: "Self-leveling 2-line green cross line laser with a 360° rotatable shield that protects the laser head and keeps the beam unobstructed. Includes a tall tripod. For tiling, ceilings, drywall, flooring, framing, masonry and HVAC work.",
+    accolades: ["Local warehouse", "No import charges", "Self-leveling", "Tall tripod included"],
+    stockLeft: 5,
+    klarna: { payments: 4, each: 2.65 },
+    priceDetails: [
+      { kind: "unique", text: "79% off the listed price of $53.05" },
+      { kind: "timed", text: "Clearance price", endsInSeconds: 12 * 3600 + 10 * 60 + 2 },
+      { kind: "lightning", text: "Only 12 left at this price" },
+    ],
+    options: { label: "Color", values: [{ name: "2-Line Yellow", available: true }, { name: "2-Line Green", available: false }, { name: "4-Line Green", available: false }] },
+    delivery: { from: "Nov 3, 2026", to: "Nov 6, 2026", note: "Fastest delivery in 2 business days" },
+    guarantees: ["Free returns", "Best price guarantee", "$5.00 credit for delay", "Return if item damaged", "15-day no update refund", "20-day no delivery refund"],
+    seller: { name: "Seller-shipped item", shipsFrom: "Ships from this seller", note: "No import charges for all seller-shipped items and no extra charges upon delivery." },
+    reviewSamples: [
+      { user: "dl***ig", date: "Sep 20, 2026", stars: 5, text: "This laser works great! I used it to frame a new wall in my basement. Even my contractor said it was awesome." },
+      { user: "Ma***oy", date: "Oct 21, 2026", stars: 5, text: "Beyond impressed. I was about to give up on ordering from Temu for fear of cheap quality, but this is good quality and the accessories came in a nice case." },
+      { user: "Ra***44", date: "Sep 5, 2026", stars: 4, text: "Visible in daylight, batteries last a long time. Hard to beat for the money." },
+    ],
   }),
   p("laser-kit", "fancy/6218092e-b9ef-4d95-81dd-f55cb6d04a87.jpg", { name: "Multipurpose Laser Leveling Tool Kit with Cross Line Laser", category: "Tools", price: 6.01, originalPrice: 54.13, sold: "100K+", rating: 4.6, shipsFrom: "temu", sellerShipping: 0 }),
   p("laser-pro", "fancy/de8dabaf-def1-4f03-afed-15603bfedea6.jpg", { name: "Self-Leveling Green Cross Line Laser with Light Adjustment", category: "Tools", price: 21.27, originalPrice: 50.99, sold: "140", rating: 4.7, shipsFrom: "seller", sellerShipping: 2.99, sellerFreeOver: 30 }),

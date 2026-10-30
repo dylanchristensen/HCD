@@ -59,7 +59,7 @@ function App() {
           </div>
           <SearchResults query={query} items={items.filter((i) => i.category === query)} showDeals={prefs.showDeals} onOpen={(i) => { setProduct(i); setPage("product"); }} />
         </>)}
-        {page === "product" && <ProductDetails item={product} {...common} cart={cart.filter((c) => c.id !== product.id)} onAddToCart={addToCart} />}
+        {page === "product" && <ProductDetails item={product} showDeals={prefs.showDeals} onAddToCart={addToCart} />}
         {page === "cart" && <Cart mode="fullscreen" {...cartProps} {...common} onCheckout={() => setPage("checkout")} onClose={() => setPage("search")} />}
         {page === "checkout" && <Checkout cart={cart} {...common} coupons={coupons} />}
       </div>

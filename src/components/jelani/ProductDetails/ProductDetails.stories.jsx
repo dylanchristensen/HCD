@@ -1,7 +1,13 @@
 import { ProductDetails } from "./ProductDetails";
-import { byId, cart, TAX_RATE, ZIP, DEMO_BUDGET } from "../../../data/sample";
-export default { title: "Jelani/ProductDetails", component: ProductDetails, argTypes: { onAddToCart: { action: "addToCart" } } };
-const base = { taxRate: TAX_RATE, zip: ZIP, budget: DEMO_BUDGET, cart: cart.filter((c) => c.id !== "laser-green") };
-/** The demo's laser level, with Temu's real gallery and seller shipping rule. */
-export const LaserLevel = { args: { ...base, item: byId["laser-green"] } };
-export const PhoneCase = { args: { ...base, item: byId["case-polka"] } };
+import { byId } from "../../../data/sample";
+export default {
+  title: "Jelani/ProductDetails",
+  component: ProductDetails,
+  parameters: { layout: "fullscreen" },
+  argTypes: { onAddToCart: { action: "addToCart" } },
+  decorators: [(Story) => <div style={{ padding: 24 }}><Story /></div>],
+};
+/** The demo's laser level, with Temu's real gallery, reviews, guarantees and seller shipping rule. */
+export const LaserLevel = { args: { item: byId["laser-green"] } };
+/** A Temu-shipped item with no sale and less detail, to check the plain states. */
+export const PlainItem = { args: { item: byId["tee-cotton"] } };
