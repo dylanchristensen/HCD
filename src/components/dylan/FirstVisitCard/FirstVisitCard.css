@@ -1,0 +1,6 @@
+.fvc-title { margin: 0 0 4px; font-size: 22px; }
+.fvc-field { display: flex; flex-direction: column; gap: 6px; margin-top: 16px; font-weight: 700; font-size: 14px; }
+.fvc-field .ui-field { max-width: 200px; font-weight: 400; }
+.fvc-field .ui-muted { font-weight: 400; }
+.fvc-toggle { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; font-size: 14px; }
+.fvc-actions { display: flex; gap: 16px; align-items: center; margin-top: 20px; }

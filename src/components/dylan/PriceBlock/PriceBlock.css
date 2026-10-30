@@ -1,0 +1,5 @@
+.pb { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; gap: 8px; max-width: 460px; background: var(--color-bg); box-shadow: var(--shadow); }
+.pb-price { display: flex; align-items: baseline; gap: 10px; } .pb-price .ui-money { font-size: 30px; }
+.pb-line { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.pb-total { border-top: var(--border-width) solid var(--color-border); padding-top: 10px; font-size: 16px; } .pb-total .ui-money { font-size: 22px; }
+.pb-budget { background: var(--color-surface); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; }

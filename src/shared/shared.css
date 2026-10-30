@@ -1,0 +1,13 @@
+* { box-sizing: border-box; }
+.ui-card { background: var(--color-bg); border: var(--border-width) solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: 16px; }
+.ui-btn { font: inherit; font-weight: 700; border-radius: var(--radius-md); padding: 10px 16px; cursor: pointer; border: var(--border-width) solid var(--color-accent); }
+.ui-btn--primary { background: var(--color-accent); color: var(--color-accent-text); }
+.ui-btn--ghost { background: transparent; color: var(--color-text); border-color: var(--color-border); }
+.ui-btn--link { background: none; border: none; padding: 0; text-decoration: underline; color: var(--color-muted); font-weight: 400; }
+.ui-pill { display: inline-flex; align-items: center; gap: 4px; border: var(--border-width) solid var(--color-border); border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.ui-pill--filled { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
+.ui-muted { color: var(--color-muted); font-size: 13px; }
+.ui-money { font-weight: 800; }
+.ui-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.ui-field { font: inherit; border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); padding: 8px 10px; width: 100%; }
+.ui-stub { border: 2px dashed var(--color-muted); border-radius: var(--radius-md); padding: 12px; color: var(--color-muted); }
