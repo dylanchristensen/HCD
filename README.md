@@ -55,7 +55,7 @@ Copy any of Dylan's components as a template. It shows up in Storybook automatic
 ## The Temu coat of paint (end of project)
 
 1. Take screenshots of the real Temu screens our components replace.
-2. Sample colors, font, border and radius values; fill them into the `[data-theme="temu"]` block in `tokens.css` (current values are rough placeholders).
+2. Colors, font, radii and button shape are already sampled from Temu's cart and homepage into the `[data-theme="temu"]` block in `tokens.css`. **`reference/temu-style/`** has the full style guide (README) and a page that rebuilds Temu's order summary, cart price, buttons, badges and tiles (`examples.html`, with a screenshot). Use the tokens (`--color-sale`, `--color-success`, `--radius-button`...) rather than hard-coded colors.
 3. Switch the theme and compare each component with its screenshot side by side.
 
 Screenshots and Temu branding are for this class project only. Keep the repo private.
