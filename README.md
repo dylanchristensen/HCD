@@ -45,6 +45,16 @@ src/components/<you>/<ComponentName>/
 
 Copy any of Dylan's components as a template. It shows up in Storybook automatically.
 
+## Real Temu products and images
+
+`src/data/products.js` has 17 real listings (phone cases, t-shirts, laser levels, gift wrap) with names, prices, sold counts, ratings and image addresses, plus a full gallery and Temu's real shipping rule for one laser level. Run this once to download the images into `public/products/`:
+
+```bash
+npm run fetch-images
+```
+
+Use them with `<img {...imageProps(product)} alt={product.name} />`. Until you've run the script, images load from Temu's servers. `reference/temu-screens/` has screenshots of Temu's homepage, search results and product page for matching the layout.
+
 ## Rules that keep the Temu reskin easy
 
 - **Colors, fonts, borders and radii come from `src/theme/tokens.css`**, via `var(--color-accent)` and friends. Don't hard-code hex colors in components.
