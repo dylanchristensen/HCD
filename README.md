@@ -4,9 +4,18 @@ Components for our Temu redesign, built one at a time and reskinned at the end.
 
 **The plan:** each of us designs our own components independently in a neutral "wireframe" look. When the designs are done, we sample colors, type and spacing from Temu screenshots into one theme file, and every component picks up the Temu look at once.
 
+## Just want to look? (no setup)
+
+Open **`temu-redesign-demo.html`** (Dylan shares it) by double-clicking. It's the whole site in one file and works in any browser on Mac or Windows. It needs internet for the product photos. To make a fresh copy after changes: `npm run build:share` (creates `share/temu-redesign-demo.html`).
+
 ## Run it
 
-You need [Node.js](https://nodejs.org) 18 or newer.
+You need [Node.js](https://nodejs.org) 18 or newer (download the LTS installer; same on Mac and Windows). No GitHub account is needed if someone sends you the project as a zip: unzip it, then open a terminal in that folder.
+
+- **Mac:** open Terminal, type `cd ` (with a space), drag the unzipped folder onto the Terminal window, press Return.
+- **Windows:** open the folder in File Explorer, click the address bar, type `powershell`, press Enter.
+
+Then:
 
 ```bash
 npm install
