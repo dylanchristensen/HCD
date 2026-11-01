@@ -1,0 +1,7 @@
+.fsb { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 0; color: var(--color-text); }
+.fsb-sort { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; border: 1px solid var(--color-border); border-radius: 9999px; padding: 4px 6px 4px 12px; }
+.fsb-sort select { font: inherit; font-weight: 400; border: none; background: transparent; color: inherit; }
+.fsb-chip { font: inherit; font-size: 13px; border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text); border-radius: 9999px; padding: 6px 12px; cursor: pointer; }
+.fsb-chip.is-on { border-color: var(--color-text); background: var(--color-text); color: var(--color-bg); font-weight: 600; }
+.fsb-count { margin-left: auto; font-size: 13px; }
+.fsb-clear { font: inherit; font-size: 13px; border: none; background: none; color: var(--color-muted); text-decoration: underline; cursor: pointer; }

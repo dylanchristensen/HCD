@@ -1,0 +1,10 @@
+.qr { display: flex; gap: 20px; align-items: center; justify-content: space-between; border: 2px dashed var(--color-accent); border-radius: var(--radius-lg); padding: 14px 18px; background: var(--color-bg); color: var(--color-text); max-width: 640px; }
+[data-theme="wireframe"] .qr { border-color: var(--color-border); }
+.qr-text { display: flex; flex-direction: column; gap: 6px; }
+.qr-kicker { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--color-accent); }
+[data-theme="wireframe"] .qr-kicker { color: var(--color-muted); }
+.qr-title { font-size: 20px; font-weight: 800; }
+.qr-done { color: var(--color-success); font-weight: 600; font-size: 14px; }
+.qr-actions { display: flex; gap: 12px; align-items: center; margin-top: 4px; }
+.qr-code { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 11px; }
+.qr--mobile { max-width: 360px; }

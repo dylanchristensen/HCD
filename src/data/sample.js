@@ -71,3 +71,11 @@ export const coupons = [
   { code: "SAVE2", label: "$2 off orders over $20", amount: 2, minOrder: 20 },
   { code: "NEW10", label: "$10 off orders over $60", amount: 10, minOrder: 60 },
 ];
+
+/**
+ * The deal behind Aniah's QR-code deals banner: on real Temu this kind of offer says "scan with the app".
+ * $25 minimum, so with the demo cart ($22.55) checkout shows "add $2.45 more" after it's claimed.
+ */
+export const webDeal = { code: "APP3", label: "$3 off orders over $25", amount: 3, minOrder: 25 };
+
+export const CATEGORIES = ["Phone cases", "T-shirts", "Tools", "Gift wrap"];
