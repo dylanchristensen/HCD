@@ -23,7 +23,7 @@ export function ProductCard({ item, showDeals = true, onOpen }) {
         <span className="ui-money">{money(item.price)}</span>
         {item.originalPrice && <span className="pcard-was">{money(item.originalPrice)}</span>}
       </div>
-      <div className="pcard-rating"><span className="pcard-stars">{"★".repeat(Math.round(item.rating))}</span> <span className="ui-muted">({item.sold} sold)</span></div>
+      <div className="pcard-rating">{item.rating ? <span className="pcard-stars">{"★".repeat(Math.round(item.rating))}</span> : <span className="ui-muted">New</span>} {item.sold && <span className="ui-muted">({item.sold} sold)</span>}</div>
       {showDeals && item.deal?.type !== "everyday" && <DealLabel deal={item.deal} />}
       <EligibilityLabel eligibility={item.eligibility} />
       <DeliveryBadge delivery={item.delivery} />

@@ -1,4 +1,5 @@
 import { products } from "./products.js";
+import { catalog, TEMU_SUBCATEGORIES } from "./catalog.js";
 
 /**
  * The demo scenario. Every item is a real Temu listing (src/data/products.js, collected Oct 30, 2026).
@@ -49,13 +50,27 @@ const NOT_ELIGIBLE = { status: "not", label: "Not eligible for discount", detail
 const NEW_ONLY = { status: "new", label: "New users only", detail: "NEW10: $10 off orders over $60, first order on a new account only." };
 const eligibility = { "wrap-cow": NOT_ELIGIBLE, "laser-pro": NOT_ELIGIBLE, "case-duck": NEW_ONLY, "tee-basic": NEW_ONLY, "wrap-chicken": NEW_ONLY };
 
-export const items = products.map((p) => ({
+const fromProducts = products.map((p) => ({
   ...p,
   deal: deals[p.id] ?? { type: "everyday" },
   short: short[p.id] ?? p.name,
   delivery: { ...(localIds.has(p.id) ? LOCAL : OVERSEAS), ...(p.delivery ?? {}) },
   eligibility: eligibility[p.id] ?? ELIGIBLE,
 }));
+
+/**
+ * The rest of the store (catalog.js, ~100 real listings across Temu's categories).
+ * Temu's own tags become our labels: "Last day" -> a lightning deal that ends tonight;
+ * a very deep markdown (original price 6x or more) -> clearance, which is excluded from coupons.
+ */
+const fromCatalog = catalog.map((c) => {
+  const deep = c.originalPrice && c.originalPrice / c.price >= 6;
+  const deal = c.tags.includes("Last day") ? { type: "lightning", endsAt: "tonight 11:59 pm", regularPrice: c.originalPrice ?? c.price }
+    : deep ? { type: "clearance" } : { type: "everyday" };
+  return { ...c, deal, short: c.name, delivery: c.local ? LOCAL : OVERSEAS, eligibility: deal.type === "clearance" ? NOT_ELIGIBLE : ELIGIBLE };
+});
+
+export const items = [...fromProducts, ...fromCatalog];
 export const byId = Object.fromEntries(items.map((i) => [i.id, i]));
 
 export const cart = ["case-polka", "tee-black-3pk", "laser-green", "wrap-fish"].map((id) => byId[id]);
@@ -78,4 +93,31 @@ export const coupons = [
  */
 export const webDeal = { code: "APP3", label: "$3 off orders over $25", amount: 3, minOrder: 25 };
 
-export const CATEGORIES = ["Phone cases", "T-shirts", "Tools", "Gift wrap"];
+/** Temu's real top-level category menu (temu.com, Oct 31, 2026), in Temu's order. */
+export const CATEGORIES = [
+  "Home & Kitchen", "Women's Clothing", "Women's Curve Clothing", "Women's Shoes", "Women's Lingerie & Lounge",
+  "Men's Clothing", "Men's Shoes", "Men's Big & Tall", "Men's Underwear & Sleepwear", "Sports & Outdoors",
+  "Jewelry & Accessories", "Beauty & Personal Care", "Toys & Games", "Automotive", "Kids' Fashion", "Kids' Shoes",
+  "Baby & Maternity", "Bags & Luggage", "Patio, Lawn & Garden", "Arts, Crafts & Sewing", "Electronics",
+  "Business, Industry & Science", "Tools & Home Improvement", "Appliances", "Office & School Supplies",
+  "Health & Household", "Pet Supplies", "Cell Phones & Accessories", "Smart Home", "Musical Instruments",
+  "Food & Grocery", "Books & Media", "Beachwear", "Furniture",
+];
+
+/**
+ * For the Categories menu and category pages: each category with its subcategories.
+ * Subcategory names are Temu's real lists where we have them (TEMU_SUBCATEGORIES), plus any our items use.
+ * Each sub: { name, count (items we have in it), item (a product to picture it with) }.
+ */
+export const CATEGORY_TREE = CATEGORIES.map((name) => {
+  const inCat = items.filter((x) => x.category === name);
+  const names = [...new Set([...inCat.map((i) => i.sub), ...(TEMU_SUBCATEGORIES[name] ?? [])])];
+  const subs = names.map((sub, n) => {
+    const mine = inCat.filter((i) => i.sub === sub);
+    return { name: sub, count: mine.length, item: mine[0] ?? inCat[n % Math.max(inCat.length, 1)] ?? null };
+  }).sort((a, b) => b.count - a.count);
+  return { name, subs, count: inCat.length };
+});
+
+/** Category chips on the homepage ("Explore your interests"): the ones that have items. */
+export const INTEREST_CHIPS = CATEGORY_TREE.filter((c) => c.count > 0).map((c) => c.name);

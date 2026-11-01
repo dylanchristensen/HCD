@@ -1,0 +1,34 @@
+.home { max-width: 1400px; margin: 0 auto; }
+.home-tile, .home-dealrow-h, .home-chips button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+.home-why { border: 1px solid var(--color-success); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 20px; font-size: 13px; }
+.home-why-top { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; background: var(--color-success); color: #fff; padding: 9px 16px; }
+[data-theme="wireframe"] .home-why-top { background: var(--color-text); }
+.home-why-top b { margin-right: 16px; }
+.home-sep { opacity: .6; }
+.home-why-more { margin-left: auto; }
+.home-why-note { display: flex; gap: 8px; padding: 9px 16px; color: var(--color-success); }
+[data-theme="wireframe"] .home-why-note { color: var(--color-text); }
+
+.home-deals { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 20px; }
+@media (max-width: 900px) { .home-deals { grid-template-columns: 1fr; } }
+.home-dealrow-h { font-size: 24px !important; font-weight: 900 !important; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 10px; padding: 0 !important; }
+.home-dealrow--lightning .home-dealrow-h { color: var(--color-accent) !important; }
+.home-dealrow--clearance .home-dealrow-h { color: var(--color-sale) !important; }
+[data-theme="wireframe"] .home-dealrow-h { color: var(--color-text) !important; }
+.home-dealrow-items { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.home-tile { display: flex; flex-direction: column; gap: 4px; text-align: left; padding: 0 !important; min-width: 0; }
+.home-tile-img { aspect-ratio: 1; border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface); display: block; }
+.home-tile-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.home-tile-price b { color: var(--color-accent); font-size: 16px; } .home-tile-price s { color: var(--color-muted); font-size: 12px; margin-left: 5px; }
+.home-dealrow--clearance .home-tile-price b { color: var(--color-sale); }
+[data-theme="wireframe"] .home-tile-price b { color: var(--color-text); }
+.home-tile-note { font-size: 12px; color: var(--color-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-tile-note b { color: var(--color-text); }
+
+.home-banner { margin-bottom: 24px; }
+.home-h { font-size: 24px; font-weight: 800; text-transform: uppercase; margin: 8px 0 12px; }
+.home-chips { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; scrollbar-width: thin; }
+.home-chips button { flex: 0 0 auto; border: 1px solid var(--color-border) !important; border-radius: 9999px; padding: 9px 18px !important; font-size: 13px; white-space: nowrap; }
+.home-chips button.is-on { border: 2px solid var(--color-text) !important; font-weight: 700; }
+.home-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 24px 18px; }
+.home-more { display: flex; justify-content: center; margin: 28px 0 8px; }

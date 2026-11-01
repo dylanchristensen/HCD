@@ -3,7 +3,7 @@ import "./DealLabel.css";
 /**
  * Three deal types, one look and one meaning each (brainwriting, Dylan).
  * lightning: short sale with a stated end time, shown as clock time, never a countdown.
- * clearance: until stock runs out, with the count.
+ * clearance: until stock runs out, with the count when we have one.
  * everyday:  no time limit.
  * Renders nothing when the shopper has turned deals off.
  */
@@ -11,7 +11,7 @@ export function DealLabel({ deal, showDeals = true, detailed = false }) {
   if (!showDeals || !deal) return null;
   const text = {
     lightning: <>LIGHTNING <small>· ends {deal.endsAt}</small></>,
-    clearance: <>CLEARANCE <small>· {deal.left} left</small></>,
+    clearance: <>CLEARANCE <small>· {deal.left != null ? `${deal.left} left` : "while stock lasts"}</small></>,
     everyday: <>EVERYDAY PRICE</>,
   }[deal.type];
   return (

@@ -32,14 +32,15 @@ Split by screen. Each person owns their screen's folder; everything is designed 
 | Folder | Owner | Screens and components |
 |---|---|---|
 | `src/components/dylan` | Dylan | **OnboardingSplash** (first-use splash: ZIP, budget, deals toggle), **Cart** (popout and full-screen modes, budget line), **Checkout** (order summary with Rupak's auto-apply coupons button) |
-| `src/components/aniah` | Aniah | **DRAFT (by Dylan from Aniah's ideation notes, pending her design concept):** **NavBar** on Temu's real header layout with a Recently viewed menu, **FilterSortBar** (same sort and filters on search and Lightning Deals), **QRCodeDeals** (app-only deals claimable on the web, QR kept as an option, mobile version), **RecentlyViewed** |
+| `src/components/aniah` | Aniah | **DRAFT (by Dylan from Aniah's ideation notes, pending her design concept):** **NavBar** on Temu's real header layout (Best-Selling Items, 5-Star Rated, Local Warehouse, and a Categories mega-menu with Temu's real 34 categories and their subcategories) with a Recently viewed menu, **FilterSortBar** (same sort and filters on search and Lightning Deals), **QRCodeDeals** (app-only deals claimable on the web, QR kept as an option, mobile version), **RecentlyViewed** |
 | `src/components/rupak` | Rupak | **SearchResults** page from his design concept: **ProductCard** with **EligibilityLabel** (green eligible / blue not eligible / orange new users only, with hover conditions) and **DeliveryBadge** (local vs overseas, before you click), plus the **EligibilityGuide** side panel. DeliveryBadge also appears on each line of Dylan's cart. |
 | `src/components/jelani` | Jelani | **ProductDetails** page built from his design concept sketch (drop-down boxes, large rating, color-coded price, item metrics, shipping with stipulations, independent-scrolling reviews), SeeMoreDetails, SectionBlock, GamesRewardsTab |
+| `src/components/site` | shared | **HomePage** laid out like Temu's (Why choose Temu bar, Lightning and Clearance deal rows, a banner slot for Aniah's coupon, "Explore your interests" category chips over a long grid of Rupak's cards) |
 | `src/shared` | everyone | Button, Pill, Card, **DealLabel** (the three deal types, so every screen shows deals the same way) |
 
 Design concept sketches and mockups are in `reference/concepts/`. Aniah's folder starts as stubs or starter layouts with your ideas from our ideation session in the comment at the top. Replace them however you like. The PriceBlock in Jelani's folder came from Dylan's price ideas and is no longer used by his page.
 
-**How the screens connect** (see `src/main.jsx`): the NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. The OnboardingSplash appears on first load.
+**How the screens connect** (see `src/main.jsx`): the site opens on the HomePage; the NavBar's categories, subcategories, quick links and search open a results page (breadcrumb, subcategory circles, filters, Rupak's results). The NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. The OnboardingSplash appears on first load.
 
 ## Adding a component
 
@@ -56,7 +57,11 @@ Copy any of Dylan's components as a template. It shows up in Storybook automatic
 
 ## Real Temu products and images
 
-`src/data/products.js` has 17 real listings (phone cases, t-shirts, laser levels, gift wrap) with names, prices, sold counts, ratings and image addresses, plus a full gallery and Temu's real shipping rule for one laser level. Run this once to download the images into `public/products/`:
+`src/data/products.js` has the 18 demo listings (phone cases, t-shirts, laser levels, gift wrap) with names, prices, sold counts, ratings and image addresses, plus a full gallery and Temu's real shipping rule for one laser level.
+
+`src/data/catalog.js` fills out the rest of the store: about 200 more real listings across 20 of Temu's categories, plus Temu's real subcategory lists, collected Oct 31, 2026. It's generated from the JSON in `reference/temu-catalog-scrape/` by `python3 reference/temu-catalog-scrape/build_catalog.py`; don't edit it by hand. Temu's "Last day" tag becomes our lightning label ("ends tonight 11:59 pm"), and very deep markdowns become clearance.
+
+Run this once to download the images into `public/products/`:
 
 ```bash
 npm run fetch-images
