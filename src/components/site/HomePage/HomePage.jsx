@@ -12,7 +12,7 @@ import "./HomePage.css";
  * Our changes to the real thing: deal tiles state when the deal ends ("ends tonight 11:59 pm") instead of a
  * countdown, and both deal rows disappear when the shopper turns deals off.
  */
-export function HomePage({ items = [], interests = [], showDeals = true, banner = null, onOpen = () => {}, onSeeDeals = () => {}, onCategory = () => {} }) {
+export function HomePage({ items = [], interests = [], showDeals = true, banner = null, onOpen = () => {}, onAdd, onSeeDeals = () => {}, onCategory = () => {} }) {
   const [chip, setChip] = useState("Recommended");
   const [shown, setShown] = useState(24);
   const lightning = items.filter((i) => i.deal?.type === "lightning").slice(0, 4);
@@ -50,7 +50,7 @@ export function HomePage({ items = [], interests = [], showDeals = true, banner 
         ))}
       </div>
       <div className="home-grid">
-        {grid.slice(0, shown).map((i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} />)}
+        {grid.slice(0, shown).map((i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} />)}
       </div>
       <div className="home-more">
         {shown < grid.length

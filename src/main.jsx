@@ -12,6 +12,8 @@ import { RecentlyViewed } from "./components/aniah/RecentlyViewed/RecentlyViewed
 import { SearchResults } from "./components/rupak/SearchResults/SearchResults";
 import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetails";
 import { HomePage } from "./components/site/HomePage/HomePage";
+import { Orders } from "./components/dylan/Orders/Orders";
+import { useCart } from "./lib/useCart";
 import { imageProps } from "./data/products";
 import { items, byId, cart as demoCart, swaps, coupons as demoCoupons, webDeal, CATEGORY_TREE, INTEREST_CHIPS, TAX_RATE, ZIP, CITY, DEMO_BUDGET } from "./data/sample";
 
@@ -25,10 +27,12 @@ function App() {
   const [theme, setTheme] = useState("temu");
   const [prefs, setPrefs] = useState(START);
   const [splash, setSplash] = useState(true);
-  const [page, setPage] = useState("home");        // home | list | product | cart | checkout
+  const [page, setPage] = useState("home");        // home | list | product | cart | checkout | orders
   const [view, setView] = useState({ kind: "home" }); // what the list page shows (see `listing` below)
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const [cart, setCart] = useState(demoCart);
+  const cart = useCart(byId, demoCart);           // the working cart (src/lib/useCart.js)
+  const [orders, setOrders] = useState([]);
+  const [justPlaced, setJustPlaced] = useState(false);
   const [product, setProduct] = useState(byId["laser-green"]);
   const [recent, setRecent] = useState([]);
   const [coupons, setCoupons] = useState(demoCoupons);
@@ -37,13 +41,20 @@ function App() {
   const go = (p) => { setPage(p); setPopout(false); window.scrollTo(0, 0); };
   const show = (v) => { setView(v); setFilters(DEFAULT_FILTERS); go(v.kind === "home" ? "home" : "list"); };
   const openItem = (i) => { setProduct(i); setRecent((r) => [i, ...r.filter((x) => x.id !== i.id)].slice(0, 6)); go("product"); };
-  const addToCart = (item) => { setCart((c) => (c.find((i) => i.id === item.id) ? c : [...c, item])); setPopout(true); };
-  const swap = (from, to) => setCart((c) => c.map((i) => (i.id === from ? byId[to] : i)));
+  const addToCart = (item, qty = 1, option = null) => { cart.add(item, qty, option); setPopout(true); };
+  const placeOrder = ({ lines, totals, coupon }) => {
+    const number = `PO-211-${String(Date.now()).slice(-8, -4)}-${String(Date.now()).slice(-4)}`;
+    const placedAt = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    setOrders((os) => [{ number, placedAt, lines, totals, coupon, zip: prefs.zip || ZIP }, ...os]);
+    if (coupon) setCoupons((cs) => cs.filter((c) => c.code !== coupon.code)); // a coupon is used up once
+    cart.clear(); setJustPlaced(true); go("orders");
+  };
   const claim = (c) => setCoupons((cs) => (cs.find((x) => x.code === c.code) ? cs : [...cs, c]));
-  const reset = () => { setCart(demoCart); setPrefs(START); setCoupons(demoCoupons); setRecent([]); show({ kind: "home" }); setSplash(true); };
+  const reset = () => { cart.reset(); setOrders([]); setPrefs(START); setCoupons(demoCoupons); setRecent([]); show({ kind: "home" }); setSplash(true); };
 
   const common = { taxRate: TAX_RATE, zip: prefs.zip || ZIP, city: CITY, budget: prefs.budget, showDeals: prefs.showDeals };
-  const cartProps = { cart, swaps, catalog: byId, onSwap: swap };
+  const cartProps = { cart: cart.lines, swaps, catalog: byId, lastRemoved: cart.lastRemoved,
+    onSwap: (from, to) => cart.swap(from, byId[to]), onQty: cart.setQty, onRemove: cart.remove, onUndo: cart.undo };
   const qr = <QRCodeDeals coupon={webDeal} claimed={coupons.some((c) => c.code === webDeal.code)} onClaim={claim} />;
 
   // The list page: a category (optionally one subcategory), a search, or one of Temu's quick links.
@@ -88,15 +99,15 @@ function App() {
         </select>
       </div>
 
-      <NavBar cartCount={cart.length} categories={CATEGORY_TREE} recent={recent}
+      <NavBar cartCount={cart.count} categories={CATEGORY_TREE} recent={recent}
         onSearch={(t) => show(t.trim() ? { kind: "search", text: t.trim() } : { kind: "home" })}
         onCategory={(name, sub) => show({ kind: "category", name, sub })}
         onBestSellers={() => show({ kind: "best" })} onFiveStar={() => show({ kind: "five" })} onLocal={() => show({ kind: "local" })}
-        onHome={() => show({ kind: "home" })} onOpenItem={openItem} onCartClick={() => setPopout(true)} />
+        onHome={() => show({ kind: "home" })} onOrders={() => { setJustPlaced(false); go("orders"); }} onOpenItem={openItem} onCartClick={() => setPopout(true)} />
 
       <main style={{ padding: "16px 16px 40px", maxWidth: 1400, margin: "0 auto" }}>
         {page === "home" && (
-          <HomePage items={items} interests={INTEREST_CHIPS} showDeals={prefs.showDeals} banner={qr} onOpen={openItem}
+          <HomePage items={items} interests={INTEREST_CHIPS} showDeals={prefs.showDeals} banner={qr} onOpen={openItem} onAdd={addToCart}
             onSeeDeals={(type) => show({ kind: "deals", type })} onCategory={(name) => show({ kind: "category", name })} />
         )}
         {page === "list" && (
@@ -124,7 +135,7 @@ function App() {
             <FilterSortBar value={filters} onChange={setFilters} count={shown.length} />
             {listing.subEmpty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Showing everything in {listing.crumb}.</div>}
             {listing.empty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Here's what's popular right now.</div>}
-            <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} />
+            <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} />
             {recent.length > 0 && <div style={{ marginTop: 24 }}><RecentlyViewed items={recent} onOpen={openItem} /></div>}
           </>
         )}
@@ -135,7 +146,8 @@ function App() {
           </>
         )}
         {page === "cart" && <Cart mode="fullscreen" {...cartProps} {...common} onCheckout={() => go("checkout")} onClose={() => show({ kind: "home" })} />}
-        {page === "checkout" && <div style={{ display: "flex", justifyContent: "center" }}><Checkout cart={cart} {...common} coupons={coupons} /></div>}
+        {page === "orders" && <Orders orders={orders} justPlaced={justPlaced} onContinue={() => show({ kind: "home" })} onOpenItem={openItem} />}
+        {page === "checkout" && <div style={{ display: "flex", justifyContent: "center" }}><Checkout cart={cart.lines} {...common} coupons={coupons} onPlaceOrder={placeOrder} onBack={() => show({ kind: "home" })} /></div>}
       </main>
 
       {popout && (

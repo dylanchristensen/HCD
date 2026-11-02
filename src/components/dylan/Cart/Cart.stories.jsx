@@ -12,3 +12,10 @@ export const Fullscreen = { args: { ...base, mode: "fullscreen" }, parameters: {
 export const PopoutUnderBudget = { args: { ...base, budget: 30 } };
 export const PopoutNoBudget = { args: { ...base, budget: null } };
 export const AllTemuShipped = { args: { ...base, cart: cart.filter((i) => i.shipsFrom === "temu") } };
+
+/** Quantities: two of the tees and three laser levels (3 x $10.63 = $31.89 clears the seller's $30 free-shipping bar). */
+export const WithQuantities = { args: { ...base, cart: cart.map((i) => ({ ...i, key: i.id, qty: i.id === "tee-black-3pk" ? 2 : i.id === "laser-green" ? 3 : 1 })) } };
+/** Just removed an item: the Undo bar. */
+export const JustRemoved = { args: { ...base, cart: cart.slice(1), lastRemoved: { line: cart[0], index: 0 } } };
+export const Empty = { args: { ...base, cart: [] } };
+export const EmptyFullscreen = { args: { ...base, mode: "fullscreen", cart: [] } };

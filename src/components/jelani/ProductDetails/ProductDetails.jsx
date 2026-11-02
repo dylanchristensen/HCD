@@ -117,7 +117,7 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
           </div>
         )}
 
-        <Button onClick={() => onAddToCart(item, qty)}>Add to Cart</Button>
+        <Button onClick={() => onAddToCart(item, qty, item.options ? option : null)}>Add to Cart</Button>
 
         <div className="pd-box pd-ship">
           <div className="pd-ship-title">Shipping and Delivery</div>

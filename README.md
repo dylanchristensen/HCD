@@ -31,7 +31,7 @@ Split by screen. Each person owns their screen's folder; everything is designed 
 
 | Folder | Owner | Screens and components |
 |---|---|---|
-| `src/components/dylan` | Dylan | **OnboardingSplash** (first-use splash: ZIP, budget, deals toggle), **Cart** (popout and full-screen modes, budget line), **Checkout** (order summary with Rupak's auto-apply coupons button) |
+| `src/components/dylan` | Dylan | **OnboardingSplash** (first-use splash: ZIP, budget, deals toggle), **Cart** (popout and full-screen modes, budget line; a working cart with quantities, Remove with Undo, empty state, saved across refreshes, see `src/lib/useCart.js`), **Orders** (order placed confirmation and the Orders page), **Checkout** (order summary with Rupak's auto-apply coupons button) |
 | `src/components/aniah` | Aniah | **DRAFT (by Dylan from Aniah's ideation notes, pending her design concept):** **NavBar** on Temu's real header layout (Best-Selling Items, 5-Star Rated, Local Warehouse, and a Categories mega-menu with Temu's real 34 categories and their subcategories) with a Recently viewed menu, **FilterSortBar** (same sort and filters on search and Lightning Deals), **QRCodeDeals** (app-only deals claimable on the web, QR kept as an option, mobile version), **RecentlyViewed** |
 | `src/components/rupak` | Rupak | **SearchResults** page from his design concept: **ProductCard** with **EligibilityLabel** (green eligible / blue not eligible / orange new users only, with hover conditions) and **DeliveryBadge** (local vs overseas, before you click), plus the **EligibilityGuide** side panel. DeliveryBadge also appears on each line of Dylan's cart. |
 | `src/components/jelani` | Jelani | **ProductDetails** page built from his design concept sketch (drop-down boxes, large rating, color-coded price, item metrics, shipping with stipulations, independent-scrolling reviews), SeeMoreDetails, SectionBlock, GamesRewardsTab |
@@ -40,7 +40,7 @@ Split by screen. Each person owns their screen's folder; everything is designed 
 
 Design concept sketches and mockups are in `reference/concepts/`. Aniah's folder starts as stubs or starter layouts with your ideas from our ideation session in the comment at the top. Replace them however you like. The PriceBlock in Jelani's folder came from Dylan's price ideas and is no longer used by his page.
 
-**How the screens connect** (see `src/main.jsx`): the site opens on the HomePage; the NavBar's categories, subcategories, quick links and search open a results page (breadcrumb, subcategory circles, filters, Rupak's results). The NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. The OnboardingSplash appears on first load.
+**How the screens connect** (see `src/main.jsx`): the site opens on the HomePage; the NavBar's categories, subcategories, quick links and search open a results page (breadcrumb, subcategory circles, filters, Rupak's results). The NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. Every product card has a quick add-to-cart button, and "Place order" leads to the order confirmation; the Orders page is under "Orders & Account". The cart is saved in the browser, so **reset demo** is how you get the demo cart back before presenting. The OnboardingSplash appears on first load.
 
 ## Adding a component
 

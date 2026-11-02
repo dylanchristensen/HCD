@@ -14,7 +14,7 @@ import "./NavBar.css";
  * onCategory(name, sub?) opens a category, or one subcategory of it.
  */
 export function NavBar({ cartCount = 0, categories = [], recent = [], onSearch = () => {}, onCategory = () => {},
-  onBestSellers = () => {}, onFiveStar = () => {}, onLocal = () => {}, onHome = () => {}, onOpenItem = () => {}, onCartClick = () => {} }) {
+  onBestSellers = () => {}, onFiveStar = () => {}, onLocal = () => {}, onHome = () => {}, onOrders = () => {}, onOpenItem = () => {}, onCartClick = () => {} }) {
   const [q, setQ] = useState("");
   const [menu, setMenu] = useState(null); // "categories" | "recent" | null
   const [hover, setHover] = useState(0);
@@ -80,7 +80,7 @@ export function NavBar({ cartCount = 0, categories = [], recent = [], onSearch =
             </div>
           )}
         </div>
-        <button className="nav-icon-btn">👤 <span>Orders &amp;<br />Account</span></button>
+        <button className="nav-icon-btn" onClick={onOrders}>👤 <span>Orders &amp;<br />Account</span></button>
         <button className="nav-icon-btn" aria-label="Support">💬</button>
         <button className="nav-icon-btn" aria-label="Language and currency">🇺🇸</button>
         <button className="nav-cart" onClick={onCartClick} aria-label={`Cart, ${cartCount} items`}>🛒<span className="nav-badge">{cartCount}</span></button>

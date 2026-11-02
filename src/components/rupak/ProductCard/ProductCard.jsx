@@ -9,14 +9,19 @@ import "./ProductCard.css";
  * Owner: Rupak. Product card from Rupak's design concept mockups: discount badge on the image,
  * title, price and original price, rating, then the eligibility label and the delivery badge,
  * so shoppers can compare discounts and delivery without opening each product.
+ * Optional onAdd(item): a quick add-to-cart button on the image, like Temu's cards have.
  */
-export function ProductCard({ item, showDeals = true, onOpen }) {
+export function ProductCard({ item, showDeals = true, onOpen, onAdd }) {
   const pct = item.originalPrice ? Math.floor((1 - item.price / item.originalPrice) * 100) : 0;
   return (
     <article className="pcard" onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && onOpen?.()}>
       <div className="pcard-img">
         {item.img && <img {...imageProps(item)} alt={item.name} />}
         {showDeals && pct > 0 && <span className="pcard-pct">-{pct}%</span>}
+        {onAdd && (
+          <button className="pcard-add" aria-label={`Add ${item.name} to cart`} title="Add to cart"
+            onClick={(e) => { e.stopPropagation(); onAdd(item); }} onKeyDown={(e) => e.stopPropagation()}>🛒+</button>
+        )}
       </div>
       <div className="pcard-name">{item.name}</div>
       <div className="pcard-price">
