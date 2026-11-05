@@ -42,6 +42,7 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
                 <span className="ui-muted">{ship > 0 ? `+ ${money(ship)} shipping` : "free shipping"}</span>
               </div>
               {showDeals && i.deal?.type === "lightning" && <div className="ui-muted">Lightning price, held until {i.deal.endsAt}</div>}
+              {i.checkoutOffer && <div className="cart-offer">{i.checkoutOffer.percent}% off at checkout: you pay {money(i.price * qty * (1 - i.checkoutOffer.percent / 100))}</div>}
               <DeliveryBadge delivery={i.delivery} variant="cart" />
               <div className="cart-controls">
                 <div className="cart-qty" role="group" aria-label={`Quantity of ${i.short ?? i.name}`}>
@@ -75,6 +76,7 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
     <>
       <div className="cart-sum">
         <div className="ui-row"><span>Items</span><span>{money(t.subtotal)}</span></div>
+        {t.itemDiscount > 0 && <div className="ui-row cart-offer"><span>20% off at checkout <span className="ui-muted">({t.offerCount} {t.offerCount === 1 ? "item" : "items"}, applied automatically)</span></span><span>−{money(t.itemDiscount)}</span></div>}
         <div className="ui-row"><span>Shipping {t.sellerShippedCount > 0 && <span className="ui-muted">({t.sellerShippedCount} seller-shipped)</span>}</span><span>{money(t.shipping)}</span></div>
         <div className="ui-row"><span>Est. tax <span className="ui-muted">({zip})</span></span><span>{money(t.tax)}</span></div>
         <div className="ui-row cart-total"><span>You'll pay</span><span className="ui-money">{money(t.total)}</span></div>

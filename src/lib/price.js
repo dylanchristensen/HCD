@@ -25,12 +25,15 @@ export function landedPrice(item, taxRate) {
 /** The whole cart, plus where it sits against an optional budget. A coupon discount comes off before tax. */
 export function cartTotals(items, taxRate, budget = null, discount = 0) {
   const subtotal = round(items.reduce((s, i) => s + i.price * (i.qty ?? 1), 0));
+  // Rupak's "20% OFF at checkout" items: the discount applies automatically, in the cart and at checkout.
+  const offerItems = items.filter((i) => i.checkoutOffer);
+  const itemDiscount = round(offerItems.reduce((s, i) => s + (i.price * (i.qty ?? 1) * i.checkoutOffer.percent) / 100, 0));
   const shipping = round(items.reduce((s, i) => s + sellerShippingFor(i, i.qty ?? 1), 0));
-  const tax = round((subtotal - discount + shipping) * taxRate);
-  const total = round(subtotal - discount + shipping + tax);
+  const tax = round((subtotal - itemDiscount - discount + shipping) * taxRate);
+  const total = round(subtotal - itemDiscount - discount + shipping + tax);
   const sellerShippedCount = items.filter((i) => sellerShippingFor(i, i.qty ?? 1) > 0).length;
   const overBudget = budget != null ? round(total - budget) : null;
-  return { subtotal, discount, shipping, tax, total, sellerShippedCount, budget, overBudget };
+  return { subtotal, itemDiscount, offerCount: offerItems.length, discount, shipping, tax, total, sellerShippedCount, budget, overBudget };
 }
 
 /** Coupons the shopper qualifies for, best first. A coupon is { code, label, amount } or { code, label, percent }, with minOrder. */

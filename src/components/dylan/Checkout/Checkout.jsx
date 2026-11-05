@@ -34,6 +34,7 @@ export function Checkout({ cart, taxRate, zip, budget = null, coupons = [], defa
     <section className="co">
       <h3 className="co-title">Order summary</h3>
       <div className="ui-row"><span>Items ({count})</span><span>{money(t.subtotal)}</span></div>
+      {t.itemDiscount > 0 && <div className="ui-row co-discount"><span>20% off at checkout ({t.offerCount} {t.offerCount === 1 ? "item" : "items"})</span><span>−{money(t.itemDiscount)}</span></div>}
       {applied && <div className="ui-row co-discount"><span>Coupon {applied.code}</span><span>−{money(applied.savings)}</span></div>}
       <div className="ui-row"><span>Shipping</span><span>{money(t.shipping)}</span></div>
       <div className="ui-row"><span>Tax ({zip})</span><span>{money(t.tax)}</span></div>

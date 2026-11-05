@@ -5,79 +5,74 @@ import { ProductCard } from "../../rupak/ProductCard/ProductCard";
 import "./HomePage.css";
 
 /**
- * The homepage, laid out like Temu's (reference/temu-screens/homepage-with-coupon-popup.jpg):
- * "Why choose Temu" bar, Lightning Deals and Clearance Deals rows side by side, a banner slot
- * (Aniah's claim-on-web coupon goes here), then "Explore your interests" category chips over a long grid
- * of Rupak's product cards. Shared/assembly screen, not one person's concept.
- * Our changes to the real thing: deal tiles state when the deal ends ("ends tonight 11:59 pm") instead of a
- * countdown, and both deal rows disappear when the shopper turns deals off.
+ * The homepage, laid out like Rupak's final homepage mockup (Nov 5, 2026), which follows real Temu during its
+ * Black Friday sale: a sale banner, the Price Match bar, Lightning and Clearance deals as one row of Rupak's
+ * product cards, a "Shop now, pay later" strip, then "Explore your interests" chips over a long grid.
+ * Aniah's claim-on-web coupon goes in the `banner` slot. Shared/assembly screen.
+ * Deals turned off (onboarding toggle) hides the sale banner and the deal row.
  */
 export function HomePage({ items = [], interests = [], showDeals = true, banner = null, onOpen = () => {}, onAdd, onSeeDeals = () => {}, onCategory = () => {} }) {
   const [chip, setChip] = useState("Recommended");
-  const [shown, setShown] = useState(24);
-  const lightning = items.filter((i) => i.deal?.type === "lightning").slice(0, 4);
-  const clearance = items.filter((i) => i.deal?.type === "clearance").slice(0, 4);
+  const [shown, setShown] = useState(25);
+  const lightning = items.filter((i) => i.deal?.type === "lightning");
+  const clearance = items.filter((i) => i.deal?.type === "clearance");
+  const dealRow = [...lightning.slice(0, 3), ...clearance.slice(0, 2)];
+  const hero = [...lightning].sort((a, b) => (b.originalPrice ?? 0) / b.price - (a.originalPrice ?? 0) / a.price).slice(0, 2);
   const grid = chip === "Recommended" ? interleave(items) : items.filter((i) => i.category === chip);
+  const card = (i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} />;
 
   return (
     <div className="home">
+      {showDeals && (
+        <section className="home-hero" aria-label="Black Friday sale">
+          <div className="home-hero-tag"><span>TEMU</span><b>UP TO</b><strong>90%</strong><b>OFF</b></div>
+          <div className="home-hero-text">
+            <div className="home-hero-title">BLACK FRIDAY <em>Deals</em></div>
+            <button className="home-hero-cta" onClick={() => onSeeDeals("lightning")}>SHOP NOW ›</button>
+          </div>
+          <div className="home-hero-items">
+            {hero.map((i) => (
+              <button key={i.id} className="home-hero-item" onClick={() => onOpen(i)}>
+                <span className="home-hero-img"><img {...imageProps(i)} alt={i.name} /></span>
+                <b>{money(i.price)}</b>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
       <div className="home-why">
-        <div className="home-why-top">
-          <b>🛡 Why choose Temu?</b>
-          <span>🔒 Secure privacy</span><span className="home-sep">|</span>
-          <span>💳 Safe payments</span><span className="home-sep">|</span>
-          <span>🚚 Delivery guarantee</span>
-          <span className="home-why-more">›</span>
-        </div>
+        <div className="home-why-top"><b>✓ Never overpay with our Price Match Guarantee</b><span className="home-why-more">›</span></div>
         <div className="home-why-note">🔔 Be wary of messages about delivery issues claiming to be from USPS. <span className="home-why-more">View ›</span></div>
       </div>
 
       {showDeals && (
-        <div className="home-deals">
-          <DealRow title="⚡ Lightning Deals" tone="lightning" items={lightning} onOpen={onOpen} onMore={() => onSeeDeals("lightning")}
-            note={(i) => `ends ${i.deal.endsAt}`} />
-          <DealRow title="↘ Clearance Deals" tone="clearance" items={clearance} onOpen={onOpen} onMore={() => onSeeDeals("clearance")}
-            note={() => "while stock lasts"} />
-        </div>
+        <section className="home-deals">
+          <div className="home-deals-heads">
+            <button className="home-dealrow-h home-dealrow--lightning" onClick={() => onSeeDeals("lightning")}>⚡ LIGHTNING DEALS <span>Limited-time offers ›</span></button>
+            <button className="home-dealrow-h home-dealrow--clearance" onClick={() => onSeeDeals("clearance")}>↘ CLEARANCE DEALS <span>Limited stock ›</span></button>
+          </div>
+          <div className="home-deals-cards">{dealRow.map(card)}</div>
+        </section>
       )}
+
+      <div className="home-bnpl">Shop now, pay later with <span>Afterpay</span><span>Klarna</span><span>Affirm</span><span>PayPal</span></div>
 
       {banner && <div className="home-banner">{banner}</div>}
 
-      <h2 className="home-h">Explore your interests</h2>
+      <div className="home-h">{showDeals && <div className="home-h-kicker">◆ BLACK FRIDAY DEALS ◆</div>}EXPLORE YOUR INTERESTS</div>
       <div className="home-chips" role="tablist">
         {["Recommended", ...interests].map((c) => (
-          <button key={c} role="tab" aria-selected={chip === c} className={chip === c ? "is-on" : ""} onClick={() => { setChip(c); setShown(24); }}>{c}</button>
+          <button key={c} role="tab" aria-selected={chip === c} className={chip === c ? "is-on" : ""} onClick={() => { setChip(c); setShown(25); }}>{c}</button>
         ))}
       </div>
-      <div className="home-grid">
-        {grid.slice(0, shown).map((i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} />)}
-      </div>
+      <div className="home-grid">{grid.slice(0, shown).map(card)}</div>
       <div className="home-more">
         {shown < grid.length
-          ? <button className="ui-btn" onClick={() => setShown((n) => n + 24)}>See more ⌄</button>
+          ? <button className="ui-btn" onClick={() => setShown((n) => n + 25)}>See more ⌄</button>
           : chip !== "Recommended" && <button className="ui-btn ui-btn--ghost" onClick={() => onCategory(chip)}>Shop all {chip} ›</button>}
       </div>
     </div>
-  );
-}
-
-function DealRow({ title, tone, items, onOpen, onMore, note }) {
-  return (
-    <section className={`home-dealrow home-dealrow--${tone}`}>
-      <button className="home-dealrow-h" onClick={onMore}>{title} <span>›</span></button>
-      <div className="home-dealrow-items">
-        {items.map((i) => {
-          const pct = i.originalPrice ? Math.floor((1 - i.price / i.originalPrice) * 100) : 0;
-          return (
-            <button key={i.id} className="home-tile" onClick={() => onOpen(i)}>
-              <span className="home-tile-img"><img {...imageProps(i)} alt={i.name} /></span>
-              <span className="home-tile-price"><b>{money(i.price)}</b>{i.originalPrice && <s>{money(i.originalPrice)}</s>}</span>
-              <span className="home-tile-note">{pct > 0 && <b>-{pct}%</b>} {note(i)}</span>
-            </button>
-          );
-        })}
-      </div>
-    </section>
   );
 }
 

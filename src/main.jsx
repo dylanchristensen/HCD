@@ -132,7 +132,7 @@ function App() {
               </div>
             )}
             {view.kind === "search" && <div style={{ marginBottom: 12 }}>{qr}</div>}
-            <FilterSortBar value={filters} onChange={setFilters} count={shown.length} />
+            <FilterSortBar value={filters} onChange={setFilters} count={shown.length} categories={[...new Set((listing.empty ? popular : listing.list).map((i) => i.sub).filter(Boolean))]} />
             {listing.subEmpty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Showing everything in {listing.crumb}.</div>}
             {listing.empty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Here's what's popular right now.</div>}
             <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} />

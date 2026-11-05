@@ -70,7 +70,26 @@ const fromCatalog = catalog.map((c) => {
   return { ...c, deal, short: c.name, delivery: c.local ? LOCAL : OVERSEAS, eligibility: deal.type === "clearance" ? NOT_ELIGIBLE : ELIGIBLE };
 });
 
-export const items = [...fromProducts, ...fromCatalog];
+/**
+ * Rupak's final card (Nov 5, 2026) adds two things our listings need:
+ *  - checkoutOffer: "20% OFF at checkout". The 20% really comes off, in the cart and at checkout
+ *    (src/lib/price.js), the way Temu's checkout says "Coupon applied automatically". DEMO RULE (invented):
+ *    every eighth catalog item that isn't on clearance ("only a few discounts", Rupak, Nov 5). The four demo-cart items have none, so the demo
+ *    numbers ($27.39 vs. a $25 budget) don't move.
+ *  - soldToday: "Sold N in last 24 hours". ESTIMATE (invented): Temu showed us total sold counts, not daily ones,
+ *    so items with 20K+ sold get total / 200, rounded to tens (100K+ sold -> 500).
+ */
+const soldNum = (s) => (s ? parseFloat(s) * (String(s).includes("K") ? 1000 : 1) : 0);
+const withRupakFinal = (i, n) => {
+  const sold = soldNum(i.sold);
+  return {
+    ...i,
+    soldToday: sold >= 20000 ? Math.round(sold / 200 / 10) * 10 : null,
+    checkoutOffer: i.id.includes("-") && !products.some((p) => p.id === i.id) && i.deal.type !== "clearance" && n % 8 === 0 ? { percent: 20 } : null,
+  };
+};
+
+export const items = [...fromProducts, ...fromCatalog].map(withRupakFinal);
 export const byId = Object.fromEntries(items.map((i) => [i.id, i]));
 
 export const cart = ["case-polka", "tee-black-3pk", "laser-green", "wrap-fish"].map((id) => byId[id]);
