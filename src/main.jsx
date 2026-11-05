@@ -7,7 +7,7 @@ import { Cart } from "./components/dylan/Cart/Cart";
 import { Checkout } from "./components/dylan/Checkout/Checkout";
 import { NavBar } from "./components/aniah/NavBar/NavBar";
 import { FilterSortBar, applyFilters, DEFAULT_FILTERS } from "./components/aniah/FilterSortBar/FilterSortBar";
-import { QRCodeDeals } from "./components/aniah/QRCodeDeals/QRCodeDeals";
+import { CouponPopup } from "./components/aniah/CouponPopup/CouponPopup";
 import { RecentlyViewed } from "./components/aniah/RecentlyViewed/RecentlyViewed";
 import { SearchResults } from "./components/rupak/SearchResults/SearchResults";
 import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetails";
@@ -40,10 +40,13 @@ function App() {
   const [coupons, setCoupons] = useState(demoCoupons);
   const [popout, setPopout] = useState(false);
   const [quick, setQuick] = useState(null);   // product shown in Quick look
+  const [couponOpen, setCouponOpen] = useState(false);
+  const [couponSeen, setCouponSeen] = useState(false);
+  const [backTo, setBackTo] = useState(null);  // the list page a product was opened from
 
   const go = (p) => { setPage(p); setPopout(false); window.scrollTo(0, 0); };
   const show = (v) => { setView(v); setFilters(DEFAULT_FILTERS); go(v.kind === "home" ? "home" : "list"); };
-  const openItem = (i) => { setProduct(i); setRecent((r) => [i, ...r.filter((x) => x.id !== i.id)].slice(0, 6)); go("product"); };
+  const openItem = (i) => { if (page === "home" || page === "list") setBackTo({ page, view }); setProduct(i); setRecent((r) => [i, ...r.filter((x) => x.id !== i.id)].slice(0, 6)); go("product"); };
   const addToCart = (item, qty = 1, option = null) => { cart.add(item, qty, option); setPopout(true); };
   const placeOrder = ({ lines, totals, coupon }) => {
     const number = `PO-211-${String(Date.now()).slice(-8, -4)}-${String(Date.now()).slice(-4)}`;
@@ -53,7 +56,7 @@ function App() {
     cart.clear(); setJustPlaced(true); go("orders");
   };
   const claim = (c) => setCoupons((cs) => (cs.find((x) => x.code === c.code) ? cs : [...cs, c]));
-  const reset = () => { cart.reset(); setOrders([]); setPrefs(START); setCoupons(demoCoupons); setRecent([]); show({ kind: "home" }); setSplash(true); };
+  const reset = () => { cart.reset(); setOrders([]); setPrefs(START); setCoupons(demoCoupons); setRecent([]); setCouponSeen(false); show({ kind: "home" }); setSplash(true); };
 
   const zip = isZip(prefs.zip) ? prefs.zip : ZIP;
   const tax = taxForZip(zip) ?? { rate: TAX_RATE, label: CITY };   // estimated tax follows the ZIP (src/lib/tax.js)
@@ -61,7 +64,8 @@ function App() {
   const common = { taxRate: tax.rate, zip, city: tax.label, budget: prefs.budget, showDeals: prefs.showDeals };
   const cartProps = { onZipChange: changeZip, cart: cart.lines, swaps, catalog: byId, lastRemoved: cart.lastRemoved,
     onSwap: (from, to) => cart.swap(from, byId[to]), onQty: cart.setQty, onRemove: cart.remove, onUndo: cart.undo };
-  const qr = <QRCodeDeals coupon={webDeal} claimed={coupons.some((c) => c.code === webDeal.code)} onClaim={claim} />;
+  // Aniah's web coupon pop-up: once per visit, right after onboarding, and only if the shopper left deals on.
+  const finishOnboarding = (p) => { setPrefs({ zip: p.zip || ZIP, budget: p.budget, showDeals: p.showDeals }); setSplash(false); if (p.showDeals && !couponSeen) { setCouponOpen(true); setCouponSeen(true); } };
 
   // The list page: a category (optionally one subcategory), a search, or one of Temu's quick links.
   const soldNum = (s) => (s ? parseFloat(s) * (String(s).includes("K") ? 1000 : 1) : 0);
@@ -82,7 +86,7 @@ function App() {
     if (v.kind === "best") return { title: "👍 Best-Selling Items", list: [...items].sort((a, b) => soldNum(b.sold) - soldNum(a.sold)).slice(0, 48) };
     if (v.kind === "five") return { title: "⭐ 5-Star Rated", list: items.filter((i) => i.rating >= 4.8) };
     if (v.kind === "local") return { title: "🚚 Local Warehouse", list: items.filter((i) => i.delivery?.local) };
-    if (v.kind === "deals") return { title: v.type === "clearance" ? "↘ Clearance Deals" : "⚡ Lightning Deals", list: items.filter((i) => i.deal?.type === v.type) };
+    if (v.kind === "deals") return { title: v.type === "clearance" ? "↘ Clearance deals" : "⚡ Lightning deals", list: items.filter((i) => i.deal?.type === v.type) };
     return { title: "Recommended for you", list: items };
   })();
   const popular = [...items].sort((a, b) => soldNum(b.sold) - soldNum(a.sold)).slice(0, 24);
@@ -98,6 +102,7 @@ function App() {
           <button key={p} className="ui-btn ui-btn--ghost" style={{ padding: "2px 10px", fontSize: 12 }} onClick={() => go(p)}>{p}</button>
         ))}
         <button className="ui-btn ui-btn--ghost" style={{ padding: "2px 10px", fontSize: 12 }} onClick={() => setSplash(true)}>show onboarding</button>
+        <button className="ui-btn ui-btn--ghost" style={{ padding: "2px 10px", fontSize: 12 }} onClick={() => setCouponOpen(true)}>show coupon</button>
         <button className="ui-btn ui-btn--ghost" style={{ padding: "2px 10px", fontSize: 12 }} onClick={reset}>reset demo</button>
         <select value={theme} onChange={(e) => setTheme(e.target.value)} style={{ fontSize: 12 }}>
           <option value="temu">Temu skin</option>
@@ -113,7 +118,7 @@ function App() {
 
       <main style={{ padding: "16px 16px 40px", maxWidth: 1400, margin: "0 auto" }}>
         {page === "home" && (
-          <HomePage items={items} interests={INTEREST_CHIPS} showDeals={prefs.showDeals} banner={qr} onOpen={openItem} onAdd={addToCart} onQuickLook={setQuick}
+          <HomePage items={items} interests={INTEREST_CHIPS} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} onQuickLook={setQuick}
             onSeeDeals={(type) => show({ kind: "deals", type })} onCategory={(name) => show({ kind: "category", name })} />
         )}
         {page === "list" && (
@@ -137,8 +142,7 @@ function App() {
                 ))}
               </div>
             )}
-            {view.kind === "search" && <div style={{ marginBottom: 12 }}>{qr}</div>}
-            <FilterSortBar value={filters} onChange={setFilters} count={shown.length} categories={[...new Set((listing.empty ? popular : listing.list).map((i) => i.sub).filter(Boolean))]} />
+            <FilterSortBar value={filters} onChange={setFilters} count={shown.length} total={(listing.empty ? popular : listing.list).length} categories={[...new Set((listing.empty ? popular : listing.list).map((i) => i.sub).filter(Boolean))]} />
             {listing.subEmpty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Showing everything in {listing.crumb}.</div>}
             {listing.empty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Here's what's popular right now.</div>}
             <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} onQuickLook={setQuick} />
@@ -147,6 +151,7 @@ function App() {
         )}
         {page === "product" && (
           <>
+            {backTo && <button className="ui-btn ui-btn--ghost" style={{ marginBottom: 12 }} onClick={() => { setView(backTo.view); go(backTo.page); }}>‹ Back to {backTo.page === "home" ? "home" : "results"}</button>}
             <ProductDetails item={product} showDeals={prefs.showDeals} onAddToCart={addToCart} />
             {recent.length > 1 && <div style={{ marginTop: 24 }}><RecentlyViewed items={recent.filter((r) => r.id !== product.id)} onOpen={openItem} /></div>}
           </>
@@ -165,7 +170,8 @@ function App() {
 
       {quick && <QuickLook item={quick} showDeals={prefs.showDeals} onClose={() => setQuick(null)} onAdd={addToCart} onDetails={openItem} />}
       <OnboardingSplash open={splash} defaultZip={prefs.zip} defaultBudget={prefs.budget ?? ""}
-        onDone={(p) => { setPrefs({ zip: p.zip || ZIP, budget: p.budget, showDeals: p.showDeals }); setSplash(false); }} />
+        onDone={finishOnboarding} />
+      {couponOpen && <CouponPopup coupon={webDeal} onClaim={claim} onClose={() => setCouponOpen(false)} />}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import "./HomePage.css";
  * The homepage, laid out like Rupak's final homepage mockup (Nov 5, 2026), which follows real Temu during its
  * Black Friday sale: a sale banner, the Price Match bar, Lightning and Clearance deals as one row of Rupak's
  * product cards, a "Shop now, pay later" strip, then "Explore your interests" chips over a long grid.
- * Aniah's claim-on-web coupon goes in the `banner` slot. Shared/assembly screen.
+ * Shared/assembly screen. (Aniah's web coupon is a pop-up now, shown by main.jsx after onboarding.)
  * Deals turned off (onboarding toggle) hides the sale banner and the deal row.
  */
 export function HomePage({ items = [], interests = [], showDeals = true, banner = null, onOpen = () => {}, onAdd, onQuickLook, onSeeDeals = () => {}, onCategory = () => {} }) {

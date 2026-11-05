@@ -1,0 +1,10 @@
+.cp-backdrop { position: fixed; inset: 0; background: rgba(40, 44, 56, 0.6); z-index: 95; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.cp { width: 100%; max-width: 380px; background: var(--color-bg); color: var(--color-text); border-radius: var(--radius-lg); box-shadow: 0 12px 40px rgba(0,0,0,.25); padding: 28px 28px 18px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.cp--mobile .cp { max-width: 260px; padding: 22px 18px 14px; }
+.cp-title { margin: 0; font-size: 22px; font-weight: 800; }
+.cp-text { margin: 0; color: var(--color-muted); font-size: 14px; line-height: 1.4; }
+.cp-claim { width: 100%; margin-top: 8px; font: inherit; font-size: 16px; font-weight: 700; border: none; border-radius: var(--radius-sm); padding: 12px; background: #c2410c; color: #fff; cursor: pointer; }
+[data-theme="temu"] .cp-claim { background: var(--color-accent); border-radius: 9999px; }
+[data-theme="wireframe"] .cp-claim { background: var(--color-text); color: var(--color-bg); }
+.cp-no { font: inherit; font-size: 13px; background: none; border: none; color: var(--color-text); text-decoration: underline; cursor: pointer; padding: 4px; }
+.cp-check { width: 44px; height: 44px; border-radius: 50%; background: var(--color-success); color: #fff; display: grid; place-items: center; font-size: 24px; font-weight: 800; }

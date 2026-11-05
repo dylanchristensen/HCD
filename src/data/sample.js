@@ -98,19 +98,18 @@ export const cart = ["case-polka", "tee-black-3pk", "laser-green", "wrap-fish"].
 export const swaps = { "laser-green": "laser-kit" };
 
 /**
- * Coupons. NEW10 is the real offer Temu's homepage pop-up showed on Oct 30, 2026
- * ("$10 OFF on orders over $60"). SAVE2 is a demo coupon so the auto-apply button has something to apply.
+ * Coupons. SAVE2 is a demo coupon, available from the start, so auto-apply at checkout has something to apply.
  */
 export const coupons = [
   { code: "SAVE2", label: "$2 off orders over $20", amount: 2, minOrder: 20 },
-  { code: "NEW10", label: "$10 off orders over $60", amount: 10, minOrder: 60 },
 ];
 
 /**
- * The deal behind Aniah's QR-code deals banner: on real Temu this kind of offer says "scan with the app".
- * $25 minimum, so with the demo cart ($22.55) checkout shows "add $2.45 more" after it's claimed.
+ * The coupon in Aniah's web pop-up: NEW10, the real offer Temu's homepage pop-up showed on Oct 30, 2026
+ * ("$10 OFF on orders over $60"). Claimed with one click on the web (no QR); then checkout shows it and
+ * how much more the cart needs ($37.45 more for the $22.55 demo cart).
  */
-export const webDeal = { code: "APP3", label: "$3 off orders over $25", amount: 3, minOrder: 25 };
+export const webDeal = { code: "NEW10", label: "$10 off orders over $60", amount: 10, minOrder: 60 };
 
 /** Temu's real top-level category menu (temu.com, Oct 31, 2026), in Temu's order. */
 export const CATEGORIES = [
