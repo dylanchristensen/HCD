@@ -6,3 +6,10 @@
 .co-coupons { display: flex; flex-direction: column; gap: 6px; margin: 8px 0 2px; font-size: 13px; }
 .co-match { background: var(--color-surface); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; margin-top: 6px; }
 .co-note { border: var(--border-width) solid var(--color-border); border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px; margin-bottom: 6px; }
+.co-code { display: flex; gap: 8px; }
+.co-code input { flex: 1; min-width: 0; font: inherit; font-size: 13px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 7px 10px; background: var(--color-bg); color: var(--color-text); }
+.co-code-msg { color: var(--color-sale); font-size: 12px; }
+[data-theme="wireframe"] .co-code-msg { color: var(--color-text); }
+.co-applied { border: 1px solid var(--color-success); background: #e9f7e6; color: var(--color-success); border-radius: var(--radius-md); padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; }
+.co-applied > div:last-child { color: var(--color-text); }
+[data-theme="wireframe"] .co-applied { background: var(--color-surface); border-color: var(--color-border); color: var(--color-text); }

@@ -4,19 +4,32 @@ import { cartTotals, eligibleCoupons, money } from "../../../lib/price";
 import "./Checkout.css";
 
 /**
- * Owner: Dylan. Checkout order summary: the same numbers as the cart, a "matches your cart" line,
- * no pressure cues, and an auto-apply button for coupons the shopper qualifies for (Rupak's request).
+ * Owner: Dylan. Checkout order summary: the same numbers as the cart, a "matches your cart" line, no pressure cues.
+ * Coupons, merged with Rupak's final checkout design (Nov 5, 2026; reference/concepts/rupak-final-checkout.png):
+ *  - the best coupon the shopper qualifies for applies automatically when checkout opens
+ *    ("Coupon applied automatically"), and follows the cart if it changes
+ *  - Remove takes it off; "Apply best coupon" puts it back (Dylan's concept: the shopper stays in control)
+ *  - a coupon code box, like Rupak's design and real Temu
+ *  - unlike Rupak's design and real Temu: no "Ends in 08:54:46" countdown on the savings (Dylan's concept: no timers)
  * onPlaceOrder({ lines, totals, coupon }) is called with exactly what the shopper saw.
  */
-export function Checkout({ cart, taxRate, zip, budget = null, coupons = [], defaultApplied = false, onPlaceOrder = () => {}, onBack = () => {} }) {
+export function Checkout({ cart, taxRate, zip, budget = null, coupons = [], autoApply = true, onPlaceOrder = () => {}, onBack = () => {} }) {
   const subtotal = cartTotals(cart, taxRate).subtotal;
   const eligible = eligibleCoupons(coupons, subtotal);
   const best = eligible[0] ?? null;
-  const [appliedCode, setAppliedCode] = useState(defaultApplied && best ? best.code : null);
-  // If the cart changes and the coupon no longer qualifies, it simply stops applying.
-  const applied = eligible.find((c) => c.code === appliedCode) ?? null;
-  const setApplied = (c) => setAppliedCode(c?.code ?? null);
+  // "auto" = always the best coupon; "none" = shopper removed it; otherwise a code the shopper typed.
+  const [mode, setMode] = useState(autoApply ? "auto" : "none");
+  const [code, setCode] = useState("");
+  const [codeMsg, setCodeMsg] = useState(null);
+  const applied = mode === "auto" ? best : mode === "none" ? null : eligible.find((c) => c.code === mode) ?? null;
   const count = cart.reduce((n, i) => n + (i.qty ?? 1), 0);
+  const tryCode = (e) => {
+    e.preventDefault();
+    const c = coupons.find((x) => x.code.toLowerCase() === code.trim().toLowerCase());
+    if (!c) return setCodeMsg({ ok: false, text: `"${code.trim()}" isn't a valid coupon code.` });
+    if (subtotal < (c.minOrder ?? 0)) return setCodeMsg({ ok: false, text: `${c.code} needs ${money(c.minOrder - subtotal)} more in your cart.` });
+    setMode(c.code); setCode(""); setCodeMsg(null);
+  };
 
   if (!cart.length) {
     return (
@@ -41,15 +54,18 @@ export function Checkout({ cart, taxRate, zip, budget = null, coupons = [], defa
       <div className="ui-row co-total"><span>Total</span><span className="ui-money">{money(t.total)}</span></div>
 
       <div className="co-coupons">
+        <form className="co-code" onSubmit={tryCode}>
+          <input value={code} onChange={(e) => { setCode(e.target.value); setCodeMsg(null); }} placeholder="Enter coupon code" aria-label="Coupon code" />
+          <Button variant="ghost" type="submit" disabled={!code.trim()}>Apply</Button>
+        </form>
+        {codeMsg && <div className="co-code-msg">{codeMsg.text}</div>}
         {applied ? (
-          <div className="ui-row">
-            <span>✓ {applied.label} applied. You save <b>{money(applied.savings)}</b>.</span>
-            <Button variant="link" onClick={() => setApplied(null)}>Remove</Button>
+          <div className="co-applied">
+            <div className="ui-row"><b>✓ Coupon applied{mode === "auto" ? " automatically" : ""}</b><Button variant="link" onClick={() => setMode("none")}>Remove</Button></div>
+            <div>{applied.code}: {applied.label}. You save <b>{money(applied.savings)}</b>.</div>
           </div>
         ) : best ? (
-          <Button variant="ghost" onClick={() => setApplied(best)}>
-            Auto-apply best coupon ({eligible.length} available)
-          </Button>
+          <Button variant="ghost" onClick={() => setMode("auto")}>Apply best coupon ({eligible.length} available)</Button>
         ) : (
           <span className="ui-muted">No coupons apply to this order.</span>
         )}

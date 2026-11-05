@@ -99,7 +99,7 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
         </div>
       )}
       <Button onClick={onCheckout}>Checkout · {money(t.total)}</Button>
-      <div className="ui-muted cart-promise">The total will not change at checkout.</div>
+      <div className="ui-muted cart-promise">Checkout won't add anything. Coupons only take money off.</div>
     </>
   );
 
