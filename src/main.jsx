@@ -13,6 +13,7 @@ import { SearchResults } from "./components/rupak/SearchResults/SearchResults";
 import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetails";
 import { HomePage } from "./components/site/HomePage/HomePage";
 import { Orders } from "./components/dylan/Orders/Orders";
+import { QuickLook } from "./components/site/QuickLook/QuickLook";
 import { useCart } from "./lib/useCart";
 import { taxForZip, isZip } from "./lib/tax";
 import { imageProps } from "./data/products";
@@ -38,6 +39,7 @@ function App() {
   const [recent, setRecent] = useState([]);
   const [coupons, setCoupons] = useState(demoCoupons);
   const [popout, setPopout] = useState(false);
+  const [quick, setQuick] = useState(null);   // product shown in Quick look
 
   const go = (p) => { setPage(p); setPopout(false); window.scrollTo(0, 0); };
   const show = (v) => { setView(v); setFilters(DEFAULT_FILTERS); go(v.kind === "home" ? "home" : "list"); };
@@ -111,7 +113,7 @@ function App() {
 
       <main style={{ padding: "16px 16px 40px", maxWidth: 1400, margin: "0 auto" }}>
         {page === "home" && (
-          <HomePage items={items} interests={INTEREST_CHIPS} showDeals={prefs.showDeals} banner={qr} onOpen={openItem} onAdd={addToCart}
+          <HomePage items={items} interests={INTEREST_CHIPS} showDeals={prefs.showDeals} banner={qr} onOpen={openItem} onAdd={addToCart} onQuickLook={setQuick}
             onSeeDeals={(type) => show({ kind: "deals", type })} onCategory={(name) => show({ kind: "category", name })} />
         )}
         {page === "list" && (
@@ -139,7 +141,7 @@ function App() {
             <FilterSortBar value={filters} onChange={setFilters} count={shown.length} categories={[...new Set((listing.empty ? popular : listing.list).map((i) => i.sub).filter(Boolean))]} />
             {listing.subEmpty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Showing everything in {listing.crumb}.</div>}
             {listing.empty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Here's what's popular right now.</div>}
-            <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} />
+            <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} onQuickLook={setQuick} />
             {recent.length > 0 && <div style={{ marginTop: 24 }}><RecentlyViewed items={recent} onOpen={openItem} /></div>}
           </>
         )}
@@ -161,6 +163,7 @@ function App() {
         </div>
       )}
 
+      {quick && <QuickLook item={quick} showDeals={prefs.showDeals} onClose={() => setQuick(null)} onAdd={addToCart} onDetails={openItem} />}
       <OnboardingSplash open={splash} defaultZip={prefs.zip} defaultBudget={prefs.budget ?? ""}
         onDone={(p) => { setPrefs({ zip: p.zip || ZIP, budget: p.budget, showDeals: p.showDeals }); setSplash(false); }} />
     </div>

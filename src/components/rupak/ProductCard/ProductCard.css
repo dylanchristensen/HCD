@@ -1,5 +1,5 @@
-.pcard { display: flex; flex-direction: column; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; color: var(--color-text); cursor: pointer; min-width: 0; transition: box-shadow .15s; }
-.pcard:hover { box-shadow: 0 4px 14px rgba(0,0,0,.10); }
+.pcard { position: relative; display: flex; flex-direction: column; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; color: var(--color-text); cursor: pointer; min-width: 0; transition: box-shadow .15s, transform .15s; }
+.pcard:hover { box-shadow: 0 6px 18px rgba(0,0,0,.14); transform: translateY(-2px); }
 .pcard-img { position: relative; aspect-ratio: 1; background: var(--color-surface); overflow: hidden; }
 .pcard-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pcard-hot { position: absolute; left: 6px; top: 6px; background: #fff3e6; color: var(--color-sale); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 9999px; box-shadow: 0 1px 3px rgba(0,0,0,.12); max-width: calc(100% - 12px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -22,3 +22,11 @@
 .pcard-arrives { margin: 4px 8px 8px; background: #e9f7e6; color: var(--color-success); border-radius: var(--radius-sm); padding: 7px 10px; font-size: 13px; font-weight: 700; }
 [data-theme="wireframe"] .pcard-arrives { background: var(--color-surface); color: var(--color-text); }
 .pcard:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
+.pcard-img img { transition: transform .3s, opacity .25s; }
+.pcard:hover .pcard-img-main { transform: scale(1.05); }
+.pcard-img-alt { position: absolute; inset: 0; opacity: 0; }
+.pcard:hover .pcard-img-alt { opacity: 1; }
+.pcard:hover .pcard-img:has(.pcard-img-alt) .pcard-img-main { opacity: 0; }
+.pcard-quick { position: absolute; left: 50%; bottom: 10px; transform: translate(-50%, 6px); opacity: 0; font: inherit; font-size: 13px; font-weight: 600; background: rgba(255,255,255,.92); color: #222; border: 1px solid #cdcdcd; border-radius: 9999px; padding: 6px 16px; cursor: pointer; transition: opacity .15s, transform .15s; white-space: nowrap; }
+.pcard:hover .pcard-quick, .pcard:focus-within .pcard-quick { opacity: 1; transform: translate(-50%, 0); }
+.pcard-quick:hover { border-color: #222; }

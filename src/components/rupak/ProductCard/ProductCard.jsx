@@ -9,14 +9,19 @@ import "./ProductCard.css";
  *  - name, price and original price, star rating, a cart button on the card
  *  - one green "Arrives in X days" bar: delivery before you click
  * Deals turned off (onboarding toggle) hides the sold badge; the 20% ribbon stays because it changes the price.
- * Optional onAdd(item) shows the cart button.
+ * Optional onAdd(item) shows the cart button; optional onQuickLook(item) shows a "Quick look" button on hover.
+ * Hover (like Temu): the card lifts, the photo zooms or swaps to the second gallery photo, and Quick look appears.
  */
-export function ProductCard({ item, showDeals = true, onOpen, onAdd }) {
+export function ProductCard({ item, showDeals = true, onOpen, onAdd, onQuickLook }) {
   const rating = item.rating ?? 0;
   return (
     <article className="pcard" onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && onOpen?.()}>
       <div className="pcard-img">
-        {item.img && <img {...imageProps(item)} alt={item.name} />}
+        {item.img && <img className="pcard-img-main" {...imageProps(item)} alt={item.name} />}
+        {item.gallery?.[1] && <img className="pcard-img-alt" {...imageProps(item, 1)} alt="" aria-hidden />}
+        {onQuickLook && (
+          <button className="pcard-quick" onClick={(e) => { e.stopPropagation(); onQuickLook(item); }} onKeyDown={(e) => e.stopPropagation()}>Quick look</button>
+        )}
         {showDeals && item.soldToday && <span className="pcard-hot">🔥 Sold {item.soldToday} in last 24 hours</span>}
         {item.checkoutOffer && <span className="pcard-offer">{item.checkoutOffer.percent}% OFF<small>at checkout</small></span>}
       </div>

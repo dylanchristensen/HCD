@@ -6,12 +6,12 @@ import { ProductCard } from "../ProductCard/ProductCard";
  * delivery before you click). Aniah's FilterSortBar sits above it on the assembled page.
  * (His earlier concept had an eligibility guide panel on the side; the final design drops it.)
  */
-export function SearchResults({ query = "Recommended for you", items = [], showDeals = true, onOpen = () => {}, onAdd }) {
+export function SearchResults({ query = "Recommended for you", items = [], showDeals = true, onOpen = () => {}, onAdd, onQuickLook }) {
   return (
     <section>
       <h2 style={{ margin: "0 0 12px" }}>{query}</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
-        {items.map((i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} />)}
+        {items.map((i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} onQuickLook={onQuickLook} />)}
       </div>
       {!items.length && <p className="ui-muted">Nothing matches these filters. Try clearing one.</p>}
     </section>

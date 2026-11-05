@@ -11,7 +11,7 @@ import "./HomePage.css";
  * Aniah's claim-on-web coupon goes in the `banner` slot. Shared/assembly screen.
  * Deals turned off (onboarding toggle) hides the sale banner and the deal row.
  */
-export function HomePage({ items = [], interests = [], showDeals = true, banner = null, onOpen = () => {}, onAdd, onSeeDeals = () => {}, onCategory = () => {} }) {
+export function HomePage({ items = [], interests = [], showDeals = true, banner = null, onOpen = () => {}, onAdd, onQuickLook, onSeeDeals = () => {}, onCategory = () => {} }) {
   const [chip, setChip] = useState("Recommended");
   const [shown, setShown] = useState(25);
   const lightning = items.filter((i) => i.deal?.type === "lightning");
@@ -19,7 +19,7 @@ export function HomePage({ items = [], interests = [], showDeals = true, banner 
   const dealRow = [...lightning.slice(0, 3), ...clearance.slice(0, 2)];
   const hero = [...lightning].sort((a, b) => (b.originalPrice ?? 0) / b.price - (a.originalPrice ?? 0) / a.price).slice(0, 2);
   const grid = chip === "Recommended" ? interleave(items) : items.filter((i) => i.category === chip);
-  const card = (i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} />;
+  const card = (i) => <ProductCard key={i.id} item={i} showDeals={showDeals} onOpen={() => onOpen(i)} onAdd={onAdd} onQuickLook={onQuickLook} />;
 
   return (
     <div className="home">

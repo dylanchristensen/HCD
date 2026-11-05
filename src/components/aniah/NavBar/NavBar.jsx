@@ -71,7 +71,7 @@ export function NavBar({ cartCount = 0, categories = [], recent = [], onSearch =
           <button type="submit" aria-label="Search">🔍</button>
         </form>
         <div className="nav-menu-wrap">
-          <button className="nav-icon-btn" aria-expanded={menu === "recent"} onClick={() => toggle("recent")}>
+          <button className="nav-icon-btn" aria-expanded={menu === "recent"} onClick={() => toggle("recent")} title="Recently viewed">
             🕘 <span>Recently<br />viewed</span>{recent.length > 0 && <span className="nav-badge">{recent.length}</span>}
           </button>
           {menu === "recent" && (
@@ -80,12 +80,42 @@ export function NavBar({ cartCount = 0, categories = [], recent = [], onSearch =
             </div>
           )}
         </div>
-        <button className="nav-icon-btn" onClick={onOrders}>👤 <span>Orders &amp;<br />Account</span></button>
-        <button className="nav-icon-btn" aria-label="Support">💬</button>
-        <button className="nav-icon-btn" aria-label="Language and currency">🇺🇸</button>
-        <button className="nav-cart" onClick={onCartClick} aria-label={`Cart, ${cartCount} items`}>🛒<span className="nav-badge">{cartCount}</span></button>
+        <HoverMenu id="account" menu={menu} setMenu={setMenu} title="Orders & Account"
+          label={<>👤 <span>Hello, shopper<br /><b>Orders &amp; Account</b></span></>} onClick={() => { onOrders(); close(); }}>
+          <button onClick={() => { onOrders(); close(); }}>📦 Your orders</button>
+          {["⭐ Your reviews", "👤 Your profile", "🎟 Coupons & offers", "📍 Addresses", "🔒 Account security", "🔔 Notifications", "⚙ Settings"].map((t) => (
+            <button key={t} className="is-demo" title="Not part of the demo">{t}</button>
+          ))}
+          <div className="nav-menu-note">Only "Your orders" works in this demo.</div>
+        </HoverMenu>
+        <HoverMenu id="support" menu={menu} setMenu={setMenu} title="Support" label={<>💬 <span>Support</span></>}>
+          {["Support center", "Safety center", "Chat with Temu", "Temu purchase protection", "Privacy policy", "Terms of use"].map((t) => (
+            <button key={t} className="is-demo" title="Not part of the demo">{t}</button>
+          ))}
+        </HoverMenu>
+        <HoverMenu id="lang" menu={menu} setMenu={setMenu} title="Language and currency" label={<>🌐 <span>English</span></>} right>
+          <div className="nav-menu-head">Language</div>
+          <button className="is-on">✓ English</button>
+          <button className="is-demo" title="Not part of the demo">Español</button>
+          <div className="nav-menu-head">Currency</div>
+          <button className="is-on">✓ USD $</button>
+          <div className="nav-menu-note">You are shopping on Temu United States.</div>
+        </HoverMenu>
+        <button className="nav-cart" onClick={onCartClick} aria-label={`Cart, ${cartCount} items`} title={`Cart (${cartCount})`}>🛒<span className="nav-badge">{cartCount}</span></button>
       </div>
       </div>
     </header>
+  );
+}
+
+/** A header item whose menu opens on hover (and on keyboard focus), like Temu's account and support menus. */
+function HoverMenu({ id, menu, setMenu, title, label, onClick, right = false, children }) {
+  const open = menu === id;
+  return (
+    <div className="nav-menu-wrap" onMouseEnter={() => setMenu(id)} onMouseLeave={() => setMenu(null)}
+      onFocus={() => setMenu(id)} onKeyDown={(e) => e.key === "Escape" && setMenu(null)}>
+      <button className="nav-icon-btn" aria-haspopup="menu" aria-expanded={open} title={title} onClick={onClick ?? (() => setMenu(open ? null : id))}>{label}</button>
+      {open && <div className={`nav-menu nav-hover-menu${right ? " nav-menu--edge" : ""}`} role="menu">{children}</div>}
+    </div>
   );
 }
