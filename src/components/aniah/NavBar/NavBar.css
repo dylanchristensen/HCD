@@ -8,10 +8,10 @@
 [data-theme="wireframe"] .nav-promo b { color: #fff; }
 .nav { position: sticky; top: 0; z-index: 30; }
 .nav-main { display: flex; align-items: center; gap: 12px 20px; padding: 10px 16px; flex-wrap: wrap; max-width: 1400px; margin: 0 auto; }
-.nav-row2 { display: flex; align-items: center; gap: 14px; flex: 1 1 460px; }
+.nav-row2 { display: flex; align-items: center; gap: 12px; flex: 1 1 340px; min-width: 0; }
 .nav-logo { background: var(--color-accent) !important; color: var(--color-accent-text) !important; font-weight: 900 !important; font-size: 12px; letter-spacing: 0; padding: 0 !important; width: 48px; height: 48px; border-radius: 10px; flex: 0 0 48px; }
 .nav-links { display: flex; gap: 14px; align-items: center; font-size: 14px; font-weight: 600; white-space: nowrap; }
-.nav-search { flex: 1; display: flex; align-items: center; border: 2px solid var(--color-text); border-radius: 9999px; padding: 2px 2px 2px 14px; min-width: 160px; }
+.nav-search { flex: 1; display: flex; align-items: center; border: 2px solid var(--color-text); border-radius: 9999px; padding: 2px 2px 2px 14px; min-width: 140px; }
 .nav-search input { flex: 1; border: none; outline: none; font: inherit; background: transparent; color: var(--color-text); padding: 8px 0; min-width: 0; }
 .nav-search button { background: var(--color-text) !important; color: var(--color-bg) !important; width: 36px; height: 36px; border-radius: 50%; }
 .nav-icon-btn { display: flex; align-items: center; gap: 6px; font-size: 12px !important; line-height: 1.2; text-align: left; position: relative; white-space: nowrap; }
