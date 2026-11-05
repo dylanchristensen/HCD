@@ -14,6 +14,7 @@ import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetail
 import { HomePage } from "./components/site/HomePage/HomePage";
 import { Orders } from "./components/dylan/Orders/Orders";
 import { useCart } from "./lib/useCart";
+import { taxForZip, isZip } from "./lib/tax";
 import { imageProps } from "./data/products";
 import { items, byId, cart as demoCart, swaps, coupons as demoCoupons, webDeal, CATEGORY_TREE, INTEREST_CHIPS, TAX_RATE, ZIP, CITY, DEMO_BUDGET } from "./data/sample";
 
@@ -45,15 +46,18 @@ function App() {
   const placeOrder = ({ lines, totals, coupon }) => {
     const number = `PO-211-${String(Date.now()).slice(-8, -4)}-${String(Date.now()).slice(-4)}`;
     const placedAt = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    setOrders((os) => [{ number, placedAt, lines, totals, coupon, zip: prefs.zip || ZIP }, ...os]);
+    setOrders((os) => [{ number, placedAt, lines, totals, coupon, zip }, ...os]);
     if (coupon) setCoupons((cs) => cs.filter((c) => c.code !== coupon.code)); // a coupon is used up once
     cart.clear(); setJustPlaced(true); go("orders");
   };
   const claim = (c) => setCoupons((cs) => (cs.find((x) => x.code === c.code) ? cs : [...cs, c]));
   const reset = () => { cart.reset(); setOrders([]); setPrefs(START); setCoupons(demoCoupons); setRecent([]); show({ kind: "home" }); setSplash(true); };
 
-  const common = { taxRate: TAX_RATE, zip: prefs.zip || ZIP, city: CITY, budget: prefs.budget, showDeals: prefs.showDeals };
-  const cartProps = { cart: cart.lines, swaps, catalog: byId, lastRemoved: cart.lastRemoved,
+  const zip = isZip(prefs.zip) ? prefs.zip : ZIP;
+  const tax = taxForZip(zip) ?? { rate: TAX_RATE, label: CITY };   // estimated tax follows the ZIP (src/lib/tax.js)
+  const changeZip = (z) => setPrefs((p) => ({ ...p, zip: z }));
+  const common = { taxRate: tax.rate, zip, city: tax.label, budget: prefs.budget, showDeals: prefs.showDeals };
+  const cartProps = { onZipChange: changeZip, cart: cart.lines, swaps, catalog: byId, lastRemoved: cart.lastRemoved,
     onSwap: (from, to) => cart.swap(from, byId[to]), onQty: cart.setQty, onRemove: cart.remove, onUndo: cart.undo };
   const qr = <QRCodeDeals coupon={webDeal} claimed={coupons.some((c) => c.code === webDeal.code)} onClaim={claim} />;
 

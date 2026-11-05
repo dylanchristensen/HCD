@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Button, Pill } from "../../../shared";
+import { isZip, taxForZip } from "../../../lib/tax";
 import { cartTotals, money, sellerShippingFor } from "../../../lib/price";
 import { imageProps } from "../../../data/products";
 import { DeliveryBadge } from "../../rupak/DeliveryBadge/DeliveryBadge";
@@ -14,9 +16,13 @@ import "./Cart.css";
  * and an empty state; every number updates as the cart changes.
  */
 export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = null, showDeals = true, swaps = {}, catalog = {},
-  lastRemoved = null, onQty = () => {}, onRemove = () => {}, onUndo = () => {},
+  lastRemoved = null, onZipChange = () => {}, onQty = () => {}, onRemove = () => {}, onUndo = () => {},
   onCheckout = () => {}, onSwap = () => {}, onExpand = () => {}, onClose = () => {} }) {
   const t = cartTotals(cart, taxRate, budget);
+  const [editZip, setEditZip] = useState(false);
+  const [zipDraft, setZipDraft] = useState("");
+  const zipOk = isZip(zipDraft) && taxForZip(zipDraft);
+  const saveZip = (e) => { e.preventDefault(); if (zipOk) { onZipChange(zipDraft.trim()); setEditZip(false); } };
   const count = cart.reduce((n, i) => n + (i.qty ?? 1), 0);
   const seller = cart.filter((i) => sellerShippingFor(i, i.qty ?? 1) > 0);
   const swap = seller.map((i) => swaps[i.id] && catalog[swaps[i.id]] ? { from: i, to: catalog[swaps[i.id]] } : null).find(Boolean);
@@ -80,7 +86,16 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
         <div className="ui-row"><span>Shipping {t.sellerShippedCount > 0 && <span className="ui-muted">({t.sellerShippedCount} seller-shipped)</span>}</span><span>{money(t.shipping)}</span></div>
         <div className="ui-row"><span>Est. tax <span className="ui-muted">({zip})</span></span><span>{money(t.tax)}</span></div>
         <div className="ui-row cart-total"><span>You'll pay</span><span className="ui-money">{money(t.total)}</span></div>
-        <div className="ui-row ui-muted cart-deliver"><span>📍 Deliver to: {city ? `${city} ` : ""}{zip}</span><span>Change</span></div>
+        {editZip ? (
+          <form className="cart-zip" onSubmit={saveZip}>
+            <label>📍 ZIP <input autoFocus value={zipDraft} onChange={(e) => setZipDraft(e.target.value.replace(/\D/g, "").slice(0, 5))} inputMode="numeric" placeholder={zip} aria-label="Delivery ZIP code" /></label>
+            <Button variant="ghost" type="submit" disabled={!zipOk}>Update</Button>
+            <Button variant="link" type="button" onClick={() => setEditZip(false)}>Cancel</Button>
+            {zipDraft.length === 5 && !zipOk && <span className="cart-zip-err">We don't recognize that ZIP.</span>}
+          </form>
+        ) : (
+          <div className="ui-row ui-muted cart-deliver"><span>📍 Deliver to: {city ? `${city} ` : ""}{zip} · tax {(taxRate * 100).toFixed(2)}%</span><button className="cart-remove" onClick={() => { setZipDraft(""); setEditZip(true); }}>Change</button></div>
+        )}
       </div>
       {budget != null && (
         <div className="cart-budget">
