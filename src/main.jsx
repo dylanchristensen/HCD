@@ -178,7 +178,7 @@ function App() {
               <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 360 }}>{product.short ?? product.name}</span>
             </nav>
             {backTo && <button className="ui-btn ui-btn--ghost" style={{ marginBottom: 12 }} onClick={() => { setView(backTo.view); go(backTo.page); }}>‹ Back to {backTo.page === "home" ? "home" : "results"}</button>}
-            <ProductDetails item={product} showDeals={prefs.showDeals} onAddToCart={addToCart} />
+            <ProductDetails key={product.id} item={product} showDeals={prefs.showDeals} onAddToCart={addToCart} />
             {recent.length > 1 && <div style={{ marginTop: 24 }}><RecentlyViewed items={recent.filter((r) => r.id !== product.id)} onOpen={openItem} /></div>}
           </>
         )}

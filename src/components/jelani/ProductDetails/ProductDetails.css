@@ -52,7 +52,13 @@
 .pd-swatch:disabled { opacity: .45; cursor: not-allowed; }
 .pd-swatch small { font-size: 11px; }
 .pd-qty { display: flex; gap: 8px; align-items: center; font-size: 14px; }
-.pd-qty select { font: inherit; padding: 4px 8px; border-radius: var(--radius-sm); }
+.pd-qty { gap: 0; }
+.pd-qty > span:first-child { margin-right: 10px; }
+.pd-qty button { width: 44px; height: 44px; font: inherit; font-size: 22px; border: 2px solid var(--color-text); background: var(--color-bg); color: var(--color-text); cursor: pointer; }
+.pd-qty button:first-of-type { border-radius: var(--radius-md) 0 0 var(--radius-md); }
+.pd-qty button:last-of-type { border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+.pd-qty button:disabled { opacity: .4; cursor: not-allowed; }
+.pd-qty-n { min-width: 52px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-top: 2px solid var(--color-text); border-bottom: 2px solid var(--color-text); font-size: 18px; font-weight: 700; }
 
 .pd-right > .ui-btn { padding: 16px; font-size: 20px; }
 
@@ -81,3 +87,20 @@
 .pd-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; border-radius: 50%; border: none; background: rgba(255,255,255,.92); color: #222; font-size: 26px; line-height: 1; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.18); opacity: 0; transition: opacity .15s; }
 .pd-arrow--prev { left: 10px; } .pd-arrow--next { right: 10px; }
 .pd-main-wrap:hover .pd-arrow, .pd-arrow:focus-visible { opacity: 1; }
+
+/* Seller box (Jelani): name with accolades beside it, short overview, bio in the drop-down */
+.pd-seller-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pd-seller-accolades { display: flex; flex-wrap: wrap; font-size: 12px; color: var(--color-muted); }
+.pd-seller-accolades span { padding: 0 8px; border-left: 1px solid var(--color-border); }
+.pd-seller-accolades span:first-child { border-left: none; }
+.pd-seller-overview { margin: 2px 0 0; font-size: 14px; color: var(--color-muted); }
+.pd-low { color: var(--color-accent); font-weight: 700; }
+.pd-klarna-logo { background: #ffb3c7; color: #17120f; border-radius: 4px; padding: 0 6px; font-weight: 800; margin-right: 4px; }
+/* Price-detail icons: short label on hover or focus */
+.pd-icon-tip { position: relative; cursor: help; outline: none; }
+.pd-icon-tip:hover::after, .pd-icon-tip:focus::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translateX(-50%); white-space: nowrap; background: #222; color: #fff; font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 6px; z-index: 5; }
+/* Stipulated shipping: a button that opens its conditions */
+.pd-stip-wrap { position: relative; display: inline-block; }
+.pd-stip { font: inherit; font-weight: 600; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 2px 8px; cursor: pointer; color: var(--color-text); }
+.pd-stip-pop { position: absolute; left: 0; top: calc(100% + 6px); width: 280px; background: var(--color-bg); border: 2px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow); padding: 12px 30px 12px 12px; font-size: 13px; z-index: 6; }
+.pd-stip-x { position: absolute; top: 6px; right: 6px; border: none; background: none; cursor: pointer; color: var(--color-muted); }

@@ -15,6 +15,11 @@ import "./ProductDetails.css";
  *  - Symbols communicate sale types without text; details live in a drop-down.
  *  - Shipping says "Free", or lists the stipulation, or "Free with stipulation ⓘ" if it's too long.
  *  - The left column (gallery, seller, reviews) scrolls independently of the right.
+ * From Jelani's report text (Nov 2026): a seller box with name, short overview, accolades (years on Temu,
+ * category rank, total sales) and a drop-down bio; accolades under the description (sales, low stock);
+ * "Pay $X over time"; price-detail icons with a short hover label; a larger quantity control;
+ * "Add X to Cart"; a stipulated shipping price is a button that opens its conditions; delivery as MM/DD/YY.
+ * Items without full listing data get demo values from pageData() below (invented, see the AI Use Log).
  */
 export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} }) {
   const [shown, setShown] = useState(0);
@@ -23,6 +28,7 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
   const onSale = item.originalPrice && item.originalPrice > item.price;
   const pctOff = onSale ? Math.floor((1 - item.price / item.originalPrice) * 100) : 0;
   const ship = sellerShippingFor(item);
+  const d = pageData(item, onSale, pctOff);
 
   return (
     <div className="pd">
@@ -49,8 +55,11 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
           </div>
         </div>
 
-        <Disclosure className="pd-box" title={<b>Seller details</b>} summary={<span className="ui-muted">{item.seller?.shipsFrom ?? "Shipped by Temu"}</span>}>
-          <p>{item.seller?.note ?? "Shipped and handled by Temu's US warehouse."}</p>
+        <Disclosure className="pd-box pd-seller" openLabel="Show seller bio"
+          title={<div className="pd-seller-head"><span className="pd-avatar" aria-hidden="true">{d.seller.name[0]}</span><b>{d.seller.name}</b>
+            <span className="pd-seller-accolades">{d.seller.accolades.map((a) => <span key={a}>{a}</span>)}</span></div>}
+          summary={<p className="pd-seller-overview">{d.seller.overview}</p>}>
+          <p>{d.seller.bio}</p>
         </Disclosure>
 
         <div className="pd-box pd-reviews">
@@ -81,12 +90,12 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
         <Disclosure className="pd-box pd-accolades-box"
           title={
             <div className="pd-accolades">
-              <span>{item.accolades?.[0] ?? "Accolades"}</span>
-              {item.stockLeft != null && <span>{item.stockLeft} left</span>}
+              <span>{d.accolades[0]}</span>
+              {d.stockLeft != null && <span className="pd-low">Only {d.stockLeft} left</span>}
               <span>{item.sold} sold</span>
             </div>
           }>
-          <div className="pd-accolade-grid">{(item.accolades ?? []).map((a) => <span key={a} className="pd-accolade">{a}</span>)}</div>
+          <div className="pd-accolade-grid">{d.accolades.map((a) => <span key={a} className="pd-accolade">{a}</span>)}</div>
         </Disclosure>
 
         <div className="pd-rating"><Stars value={item.rating} large /> <span className="pd-rating-num">{item.rating?.toFixed(1)}</span> <span className="ui-muted">({item.reviews ?? item.sold})</span></div>
@@ -97,41 +106,45 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
             {onSale && <span className="pd-off">{pctOff}% off</span>}
             {onSale && <span className="pd-was">{money(item.originalPrice)}</span>}
           </div>
-          {item.klarna && <div className="pd-klarna">{item.klarna.payments} × {money(item.klarna.each)} with Klarna</div>}
-          {showDeals && item.priceDetails?.length > 0 && (
-            <Disclosure title={<span className="pd-price-details">Price details <SaleIcons details={item.priceDetails} /></span>}>
+          <div className="pd-klarna"><span className="pd-klarna-logo">Klarna</span> Pay {money(item.price)} over time: {d.klarna.payments} × {money(d.klarna.each)}</div>
+          {showDeals && d.priceDetails.length > 0 && (
+            <Disclosure title={<span className="pd-price-details">Price details <SaleIcons details={d.priceDetails} /></span>}>
               <ul className="pd-price-list">
-                {item.priceDetails.map((d, i) => (
-                  <li key={i}><SaleIcon kind={d.kind} /> {d.text}{d.kind === "timed" && <> <Countdown seconds={d.endsInSeconds} /></>}</li>
+                {d.priceDetails.map((p, i) => (
+                  <li key={i}><SaleIcon kind={p.kind} /> {p.text}{p.kind === "timed" && p.endsInSeconds && <> <Countdown seconds={p.endsInSeconds} /></>}</li>
                 ))}
               </ul>
             </Disclosure>
           )}
         </div>
 
-        {item.options && (
-          <div className="pd-box pd-metrics">
-            <div className="pd-metric-label">{item.options.label}: <b>{option}</b></div>
-            <div className="pd-swatches">
-              {item.options.values.map((v) => (
-                <button key={v.name} disabled={!v.available} className={`pd-swatch${v.name === option ? " is-on" : ""}`} onClick={() => setOption(v.name)}>
-                  {v.name}{!v.available && <small>sold out</small>}
-                </button>
-              ))}
-            </div>
-            <label className="pd-qty">Qty
-              <select value={qty} onChange={(e) => setQty(Number(e.target.value))}>{[1, 2, 3, 4, 5].map((n) => <option key={n}>{n}</option>)}</select>
-            </label>
+        <div className="pd-box pd-metrics">
+          {item.options && (
+            <>
+              <div className="pd-metric-label">{item.options.label}: <b>{option}</b></div>
+              <div className="pd-swatches">
+                {item.options.values.map((v) => (
+                  <button key={v.name} disabled={!v.available} className={`pd-swatch${v.name === option ? " is-on" : ""}`} onClick={() => setOption(v.name)}>
+                    {v.name}{!v.available && <small>sold out</small>}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+          <div className="pd-qty" role="group" aria-label="Quantity">
+            <span>Qty</span>
+            <button onClick={() => setQty(Math.max(1, qty - 1))} disabled={qty <= 1} aria-label="One fewer">−</button>
+            <span className="pd-qty-n" aria-live="polite">{qty}</span>
+            <button onClick={() => setQty(Math.min(99, qty + 1))} aria-label="One more">+</button>
           </div>
-        )}
+        </div>
 
-        <Button onClick={() => onAddToCart(item, qty, item.options ? option : null)}>Add to Cart</Button>
+        <Button onClick={() => onAddToCart(item, qty, item.options ? option : null)}>Add {qty} to Cart</Button>
 
         <div className="pd-box pd-ship">
           <div className="pd-ship-title">Shipping and Delivery</div>
           <div>Shipping price: <ShippingPrice item={item} ship={ship} /></div>
-          {item.delivery?.from && <div>Delivery from: <b className="pd-green">{item.delivery.from} to {item.delivery.to}</b></div>}
-          {item.delivery && !item.delivery.from && <div>Delivery: <b className="pd-green">{item.delivery.delivers}</b> <span className="ui-muted">({item.delivery.local ? "local warehouse" : "ships from overseas"})</span></div>}
+          {d.arrive && <div>Delivery: <b className="pd-green">{d.arrive.from} to {d.arrive.to}</b> <span className="ui-muted">({item.delivery?.local ? "local warehouse" : "ships from overseas"})</span></div>}
           {item.guarantees && (
             <Disclosure title={<span className="pd-green"><b>Order guarantees</b></span>}
               summary={<div className="pd-guarantees">{item.guarantees.slice(0, 2).map((g) => <span key={g}>{g}</span>)}</div>}>
@@ -158,12 +171,62 @@ function Disclosure({ title, summary, children, className = "", openLabel = "Mor
   );
 }
 
+/** Free, or a stipulated price shown as a button; clicking it opens the conditions (Jelani). */
 function ShippingPrice({ item, ship }) {
-  if (item.shipsFrom !== "seller") return <span className="pd-free">Free</span>;
-  if (ship === 0) return <span className="pd-free">Free</span>;
-  const stipulation = `Free with ${money(item.sellerFreeOver)} purchase or more from this seller`;
-  if (stipulation.length <= 60) return <span className="pd-stip">{money(ship)}, or {stipulation}</span>;
-  return <span className="pd-stip" title={stipulation}>{money(ship)}, or free with stipulation ⓘ</span>;
+  const [open, setOpen] = useState(false);
+  if (item.shipsFrom !== "seller" || ship === 0) return <span className="pd-free">Free</span>;
+  const conditions = item.shippingNote ?? `${money(ship)} standard shipping from this seller, or free when you order ${money(item.sellerFreeOver)} or more from this seller.`;
+  return (
+    <span className="pd-stip-wrap">
+      <button className="pd-stip" aria-expanded={open} onClick={() => setOpen(!open)}>{money(ship)}, or free with stipulation ⓘ</button>
+      {open && (
+        <span className="pd-stip-pop" role="dialog" aria-label="Shipping conditions">
+          {conditions}
+          <button className="pd-stip-x" onClick={() => setOpen(false)} aria-label="Close">✕</button>
+        </span>
+      )}
+    </span>
+  );
+}
+
+/** MM/DD/YY, as in Jelani's shipping section. */
+const mdy = (dt) => `${String(dt.getMonth() + 1).padStart(2, "0")}/${String(dt.getDate()).padStart(2, "0")}/${String(dt.getFullYear()).slice(2)}`;
+
+/**
+ * The page's data. Real listing values win; items scraped from search pages lack seller, accolade
+ * and price-detail data, so those get stable demo values derived from the item id (invented).
+ */
+function pageData(item, onSale, pctOff) {
+  const n = [...String(item.id)].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+  const where = item.sub ?? item.category ?? "its category";
+  const stores = ["Brightway", "Maple & Co.", "Harbor Goods", "Lumen Home", "Cedar Lane", "Nova Supply", "Kinfolk Trading", "Bluebird Shop"];
+  const name = item.seller?.storeName ?? `${stores[n % stores.length]} Store`;
+  const years = 1 + (n % 4);
+  const sales = `${10 + (n % 90)}K+ sold`;
+  const seller = {
+    name,
+    accolades: [`${years} yr${years > 1 ? "s" : ""} on Temu`, `#${1 + (n % 20)} in ${where}`, sales],
+    overview: item.seller?.note ?? `${name} sells ${where.toLowerCase()} and ships ${item.delivery?.local ? "from a US warehouse" : "from overseas"}.`,
+    bio: `${name} has sold on Temu for ${years} year${years > 1 ? "s" : ""}, with ${sales.replace(" sold", "")} orders across its listings. ${item.shipsFrom === "seller" ? "This item ships directly from the seller." : "Temu handles shipping, returns and refunds for this item."} Questions go through Temu's chat, and every order is covered by Temu's purchase protection.`,
+  };
+  const stockLeft = item.stockLeft ?? (n % 5 === 0 ? 3 + (n % 9) : null);
+  const accolades = item.accolades ?? [
+    item.rating >= 4.7 ? "Top rated" : "Well reviewed",
+    `${item.sold} sold`,
+    item.delivery?.local ? "Local warehouse" : "Ships from overseas",
+    ...(stockLeft != null ? [`Low stock: ${stockLeft} left`] : []),
+  ];
+  const priceDetails = item.priceDetails ?? [
+    ...(onSale ? [{ kind: "unique", text: `${pctOff}% off the listed price of ${money(item.originalPrice)}` }] : []),
+    ...(item.deal?.type === "lightning" ? [{ kind: "lightning", text: `Lightning price until ${item.deal.endsAt}` }] : []),
+    ...(item.deal?.type === "clearance" ? [{ kind: "timed", text: "Clearance price, while stock lasts" }] : []),
+  ];
+  const klarna = item.klarna ?? { payments: 4, each: Math.ceil((item.price / 4) * 100) / 100 };
+  const m = (item.delivery?.delivers ?? "").match(/(\d+)\D+(\d+)/);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const plus = (k) => { const x = new Date(today); x.setDate(x.getDate() + k); return mdy(x); };
+  const arrive = m ? { from: plus(Number(m[1])), to: plus(Number(m[2])) } : null;
+  return { seller, accolades, stockLeft, priceDetails, klarna, arrive };
 }
 
 function Stars({ value = 0, small, large }) {
@@ -172,8 +235,18 @@ function Stars({ value = 0, small, large }) {
 }
 
 const ICONS = { unique: "❗", timed: "⏱", lightning: "⚡" };
+/** Jelani: hovering an icon shows a 3 to 4 word description of the offer. */
+const HOVER = { unique: "Discount on this item", timed: "Limited-time sale price", lightning: "Lightning deal price" };
 function SaleIcon({ kind }) { return <span className={`pd-icon pd-icon--${kind}`} aria-hidden="true">{ICONS[kind]}</span>; }
-function SaleIcons({ details }) { return <span className="pd-icons">{details.map((d, i) => <SaleIcon key={i} kind={d.kind} />)}</span>; }
+function SaleIcons({ details }) {
+  return (
+    <span className="pd-icons">
+      {details.map((d, i) => (
+        <span key={i} className="pd-icon-tip" tabIndex={0} aria-label={HOVER[d.kind]} data-tip={HOVER[d.kind]}><SaleIcon kind={d.kind} /></span>
+      ))}
+    </span>
+  );
+}
 
 function Countdown({ seconds }) {
   const [left, setLeft] = useState(seconds);
