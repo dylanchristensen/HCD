@@ -15,8 +15,11 @@ import "./Cart.css";
  * Lines are products with { qty, option, key } (src/lib/useCart.js). Quantity buttons, Remove with Undo,
  * and an empty state; every number updates as the cart changes.
  */
+/** Temu's real rule: orders need at least $10 of items ("$10 Min. to checkout" on temu.com's cart, Nov 5, 2026). */
+export const MIN_ORDER = 10;
+
 export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = null, showDeals = true, swaps = {}, catalog = {},
-  lastRemoved = null, onZipChange = () => {}, onQty = () => {}, onRemove = () => {}, onUndo = () => {},
+  lastRemoved = null, recommended = [], renderCard = null, onZipChange = () => {}, onQty = () => {}, onRemove = () => {}, onUndo = () => {},
   onCheckout = () => {}, onSwap = () => {}, onExpand = () => {}, onClose = () => {} }) {
   const t = cartTotals(cart, taxRate, budget);
   const [editZip, setEditZip] = useState(false);
@@ -74,7 +77,7 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
       <div className="cart-empty-icon" aria-hidden>🛒</div>
       <b>Your cart is empty</b>
       <span className="ui-muted">Items you add will show up here with their shipping and tax.</span>
-      <Button variant="ghost" onClick={onClose}>Continue shopping</Button>
+      <Button variant="ghost" onClick={onClose}>{mode === "fullscreen" ? "See trending items" : "Continue shopping"}</Button>
     </div>
   );
 
@@ -113,7 +116,9 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
           {swap ? ` The ${swap.to.short} ships from Temu for free.` : " Temu-shipped items ship free."}
         </div>
       )}
-      <Button onClick={onCheckout}>Checkout · {money(t.total)}</Button>
+      {t.subtotal < MIN_ORDER
+        ? <Button disabled>{money(MIN_ORDER).replace(".00", "")} min. to checkout · add {money(MIN_ORDER - t.subtotal)} more</Button>
+        : <Button onClick={onCheckout}>Checkout · {money(t.total)}</Button>}
       <div className="ui-muted cart-promise">Checkout won't add anything. Coupons only take money off.</div>
     </>
   );
@@ -129,6 +134,12 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
           <section className="cart-page-lines">{undo}{cart.length ? lines : empty}</section>
           {cart.length > 0 && <aside className="cart-page-summary">{summary}</aside>}
         </div>
+        {renderCard && recommended.length > 0 && (
+          <section className="cart-recs">
+            <h3>Items you may want to add</h3>
+            <div className="cart-recs-grid">{recommended.map(renderCard)}</div>
+          </section>
+        )}
       </main>
     );
   }

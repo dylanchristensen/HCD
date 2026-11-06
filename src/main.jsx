@@ -11,6 +11,7 @@ import { CouponPopup } from "./components/aniah/CouponPopup/CouponPopup";
 import { RecentlyViewed } from "./components/aniah/RecentlyViewed/RecentlyViewed";
 import { SearchResults } from "./components/rupak/SearchResults/SearchResults";
 import { ProductDetails } from "./components/jelani/ProductDetails/ProductDetails";
+import { ProductCard } from "./components/rupak/ProductCard/ProductCard";
 import { HomePage } from "./components/site/HomePage/HomePage";
 import { Orders } from "./components/dylan/Orders/Orders";
 import { QuickLook } from "./components/site/QuickLook/QuickLook";
@@ -29,6 +30,8 @@ const START = { zip: ZIP, budget: DEMO_BUDGET, showDeals: true };
 const SEARCH_TERMS = ["lashes", "laser", "laser pointer", "lash curler", "phone case", "phone case iphone", "t-shirt", "t-shirts for men", "laser level", "laser level green", "wrapping paper", "christmas wrapping paper", "christmas decorations", "halloween decorations", "kitchen gadgets", "wireless earbuds", "dog toys", "crochet kit", "throw blanket", "womens sweater", "mens hoodie", "makeup brushes", "earrings", "crossbody bag", "desk organizer", "car accessories", "water bottle", "kids toys", "slippers"];
 // Temu's own "Popular right now" list, as shown on temu.com on Nov 5, 2026.
 const POPULAR_SEARCHES = ["christmas wrapping paper rolls", "cheap girl stuff", "christmas decorations for home", "funny christmas wrapping paper", "sticker", "squishes", "weird stuff", "iphone cases", "journaling accessories", "halloween masks"];
+
+const crumb = { background: "none", border: "none", padding: 0, font: "inherit", color: "inherit", cursor: "pointer", textDecoration: "underline" };
 
 function App() {
   const [theme, setTheme] = useState("temu");
@@ -168,12 +171,20 @@ function App() {
         )}
         {page === "product" && (
           <>
+            <nav aria-label="Breadcrumb" className="ui-muted" style={{ fontSize: 13, marginBottom: 8, display: "flex", gap: 6, flexWrap: "wrap" }}>
+              <button style={crumb} onClick={() => show({ kind: "home" })}>Home</button>›
+              {product.category && <><button style={crumb} onClick={() => show({ kind: "category", name: product.category })}>{product.category}</button>›</>}
+              {product.sub && <><button style={crumb} onClick={() => show({ kind: "category", name: product.category, sub: product.sub })}>{product.sub}</button>›</>}
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 360 }}>{product.short ?? product.name}</span>
+            </nav>
             {backTo && <button className="ui-btn ui-btn--ghost" style={{ marginBottom: 12 }} onClick={() => { setView(backTo.view); go(backTo.page); }}>‹ Back to {backTo.page === "home" ? "home" : "results"}</button>}
             <ProductDetails item={product} showDeals={prefs.showDeals} onAddToCart={addToCart} />
             {recent.length > 1 && <div style={{ marginTop: 24 }}><RecentlyViewed items={recent.filter((r) => r.id !== product.id)} onOpen={openItem} /></div>}
           </>
         )}
-        {page === "cart" && <Cart mode="fullscreen" {...cartProps} {...common} onCheckout={() => go("checkout")} onClose={() => show({ kind: "home" })} />}
+        {page === "cart" && <Cart mode="fullscreen" {...cartProps} {...common}
+          recommended={popular.filter((i) => !cart.lines.some((l) => l.id === i.id)).slice(0, 10)}
+          renderCard={(i) => <ProductCard key={i.id} item={i} showDeals={prefs.showDeals} onOpen={() => openItem(i)} onAdd={addToCart} onQuickLook={setQuick} />} onCheckout={() => go("checkout")} onClose={() => show({ kind: "home" })} />}
         {page === "orders" && <Orders orders={orders} justPlaced={justPlaced} onContinue={() => show({ kind: "home" })} onOpenItem={openItem} />}
         {page === "checkout" && <div style={{ display: "flex", justifyContent: "center" }}><Checkout cart={cart.lines} {...common} coupons={coupons} onPlaceOrder={placeOrder} onBack={() => show({ kind: "home" })} /></div>}
       </main>

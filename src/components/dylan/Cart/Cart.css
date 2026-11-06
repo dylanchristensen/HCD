@@ -47,3 +47,6 @@
 .cart-zip { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; margin-top: 4px; }
 .cart-zip input { width: 80px; font: inherit; border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 5px 8px; margin-left: 4px; background: var(--color-bg); color: var(--color-text); }
 .cart-zip-err { color: var(--color-sale); font-size: 12px; width: 100%; }
+.cart-recs { margin-top: 32px; }
+.cart-recs h3 { font-size: 18px; margin: 0 0 12px; }
+.cart-recs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }

@@ -32,13 +32,21 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
           {item.gallery && (
             <div className="pd-thumbs">
               {item.gallery.map((_, i) => (
-                <button key={i} className={`pd-thumb${i === shown ? " is-on" : ""}`} onClick={() => setShown(i)} aria-label={`Image ${i + 1}`}>
+                <button key={i} className={`pd-thumb${i === shown ? " is-on" : ""}`} onMouseEnter={() => setShown(i)} onClick={() => setShown(i)} aria-label={`Image ${i + 1}`}>
                   <img {...imageProps(item, i)} alt="" />
                 </button>
               ))}
             </div>
           )}
-          <img className="pd-main" {...(item.gallery ? imageProps(item, shown) : imageProps(item))} alt={item.name} />
+          <div className="pd-main-wrap">
+            <img className="pd-main" {...(item.gallery ? imageProps(item, shown) : imageProps(item))} alt={item.name} />
+            {item.gallery?.length > 1 && (
+              <>
+                <button className="pd-arrow pd-arrow--prev" aria-label="Previous image" onClick={() => setShown((shown - 1 + item.gallery.length) % item.gallery.length)}>‹</button>
+                <button className="pd-arrow pd-arrow--next" aria-label="Next image" onClick={() => setShown((shown + 1) % item.gallery.length)}>›</button>
+              </>
+            )}
+          </div>
         </div>
 
         <Disclosure className="pd-box" title={<b>Seller details</b>} summary={<span className="ui-muted">{item.seller?.shipsFrom ?? "Shipped by Temu"}</span>}>
