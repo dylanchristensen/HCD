@@ -14,7 +14,7 @@ export function RecentlyViewed({ items = [], onOpen = () => {}, compact = false 
       <b style={{ fontSize: compact ? 13 : 16 }}>Recently viewed</b>
       <div style={{ display: "flex", flexDirection: compact ? "column" : "row", gap: compact ? 4 : 12, overflowX: compact ? "visible" : "auto" }}>
         {items.map((i) => (
-          <button key={i.id} onClick={() => onOpen(i)}
+          <button key={i.id} title={i.name} onClick={() => onOpen(i)}
             style={{ display: "flex", flexDirection: compact ? "row" : "column", gap: 8, alignItems: compact ? "center" : "flex-start", textAlign: "left", width: compact ? "100%" : 150, padding: compact ? 6 : 8, background: "var(--color-bg)", border: compact ? "none" : "1px solid var(--color-border)", font: "inherit", color: "inherit", cursor: "pointer", borderRadius: "var(--radius-sm)" }}>
             <img {...imageProps(i)} alt="" style={{ width: compact ? 44 : 132, height: compact ? 44 : 132, objectFit: "cover", borderRadius: "var(--radius-sm)", background: "var(--color-surface)", flex: "none" }} />
             <span style={{ fontSize: 12, display: "flex", flexDirection: "column", gap: 2, minWidth: 0 }}>

@@ -15,7 +15,7 @@ import "./ProductCard.css";
 export function ProductCard({ item, showDeals = true, onOpen, onAdd, onQuickLook }) {
   const rating = item.rating ?? 0;
   return (
-    <article className="pcard" onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && onOpen?.()}>
+    <article className="pcard" title={item.name} onClick={onOpen} tabIndex={0} onKeyDown={(e) => e.key === "Enter" && onOpen?.()}>
       <div className="pcard-img">
         {item.img && <img className="pcard-img-main" {...imageProps(item)} alt={item.name} />}
         {item.gallery?.[1] && <img className="pcard-img-alt" {...imageProps(item, 1)} alt="" aria-hidden />}

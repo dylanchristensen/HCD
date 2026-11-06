@@ -32,7 +32,7 @@ export function HomePage({ items = [], interests = [], showDeals = true, banner 
           </div>
           <div className="home-hero-items">
             {hero.map((i) => (
-              <button key={i.id} className="home-hero-item" onClick={() => onOpen(i)}>
+              <button key={i.id} className="home-hero-item" title={i.name} onClick={() => onOpen(i)}>
                 <span className="home-hero-img"><img {...imageProps(i)} alt={i.name} /></span>
                 <b>{money(i.price)}</b>
               </button>
