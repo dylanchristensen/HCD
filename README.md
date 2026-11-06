@@ -6,7 +6,7 @@ Components for our Temu redesign, built one at a time and reskinned at the end.
 
 ## Just want to look? (no setup)
 
-Open **`temu-redesign-demo.html`** (Dylan shares it) by double-clicking. It's the whole site in one file and works in any browser on Mac or Windows. It needs internet for the product photos. To make a fresh copy after changes: `npm run build:share` (creates `share/temu-redesign-demo.html`).
+Go to **https://dylanchristensen.github.io/HCD/**. It runs in any browser with nothing to install, and it updates itself a minute or two after every push to `main`. For an offline copy, `npm run build:share` makes the whole site as one file (`share/temu-redesign-demo.html`) that opens by double-clicking.
 
 ## Run it
 
@@ -40,7 +40,7 @@ Split by screen. Each person owns their screen's folder; everything is designed 
 
 Design concept sketches and mockups are in `reference/concepts/`. Aniah's folder starts as stubs or starter layouts with your ideas from our ideation session in the comment at the top. Replace them however you like. The PriceBlock in Jelani's folder came from Dylan's price ideas and is no longer used by his page.
 
-**How the screens connect** (see `src/main.jsx`): the site opens on the HomePage; the NavBar's categories, subcategories, quick links and search open a results page (breadcrumb, subcategory circles, filters, Rupak's results). The NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. Every product card has a quick add-to-cart button, and "Place order" leads to the order confirmation; the Orders page is under "Orders & Account". The cart is saved in the browser, so **reset demo** is how you get the demo cart back before presenting. The OnboardingSplash appears on first load.
+**How the screens connect** (see `src/main.jsx`): the site opens on the HomePage; the NavBar's categories, subcategories, quick links and search open a results page (breadcrumb, subcategory circles, filters, Rupak's results). The NavBar cart button and "Add to cart" open the Cart popout; the popout's "Open full cart" goes to the full-screen Cart; Checkout comes from either. Every product card has a quick add-to-cart button, and "Place order" leads to the order confirmation; the Orders page is under "Orders & Account". The cart starts empty and is saved in the browser, so **reset demo** empties it before presenting. Like real Temu, checkout needs at least $10 of items. The OnboardingSplash appears on first load.
 
 ## Adding a component
 
@@ -74,7 +74,7 @@ Use them with `<img {...imageProps(product)} alt={product.name} />`. Until you'v
 - **Colors, fonts, borders and radii come from `src/theme/tokens.css`**, via `var(--color-accent)` and friends. Don't hard-code hex colors in components.
 - **Shared pieces** (Button, Pill, Card) live in `src/shared`. Use them instead of styling your own buttons.
 - **Money math** lives in `src/lib/price.js`. If your component shows a price or total, use `landedPrice` / `cartTotals` so everyone's numbers agree.
-- **Demo data** is in `src/data/sample.js`, built on the real Temu listings in `products.js`. The demo cart is the polka-dot phone case, 3-pack tees, the green laser level (seller-shipped, $2.99) and the Christmas fish wrapping paper: $22.55 + $2.99 shipping + $1.85 tax (7.25%, ZIP 28223) = **$27.39**, against a **$25** budget. Swapping the laser level for the Temu-shipped laser kit brings it to $19.23; auto-applying SAVE2 at checkout brings it to $25.25. Use these items in every screen so the demo is consistent.
+- **Demo data** is in `src/data/sample.js`, built on the real Temu listings in `products.js`. The demo scenario's cart (added by hand; the site starts empty) is the polka-dot phone case, 3-pack tees, the green laser level (seller-shipped, $2.99) and the Christmas fish wrapping paper: $22.55 + $2.99 shipping + $1.85 tax (7.25%, ZIP 28223) = **$27.39**, against a **$25** budget. Swapping the laser level for the Temu-shipped laser kit brings it to $19.23; auto-applying SAVE2 at checkout brings it to $25.25. Use these items in every screen so the demo is consistent.
 
 ## The Temu coat of paint (end of project)
 
