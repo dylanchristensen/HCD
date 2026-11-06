@@ -159,7 +159,7 @@ function App() {
                 ))}
               </div>
             )}
-            <FilterSortBar value={filters} onChange={setFilters} count={shown.length} total={(listing.empty ? popular : listing.list).length} categories={[...new Set((listing.empty ? popular : listing.list).map((i) => i.sub).filter(Boolean))]} />
+            <FilterSortBar value={filters} onChange={setFilters} count={shown.length} total={(listing.empty ? popular : listing.list).length} countFor={(f) => applyFilters(listing.empty ? popular : listing.list, f).length} categories={[...new Set((listing.empty ? popular : listing.list).map((i) => i.sub).filter(Boolean))]} />
             {listing.subEmpty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Showing everything in {listing.crumb}.</div>}
             {listing.empty && <div className="ui-muted" style={{ margin: "4px 0 12px" }}>Nothing from {listing.title} is in our demo store yet. Here's what's popular right now.</div>}
             <SearchResults query={listing.title} items={shown} showDeals={prefs.showDeals} onOpen={openItem} onAdd={addToCart} onQuickLook={setQuick} />

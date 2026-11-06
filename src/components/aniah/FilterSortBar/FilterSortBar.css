@@ -10,3 +10,27 @@
 .fsb-select.is-on select option { color: #222; }
 .fsb-count { margin-left: auto; font-size: 13px; padding-left: 8px; white-space: nowrap; }
 .fsb-clear { flex: 0 0 auto; font: inherit; font-size: 13px; border: none; background: none; color: var(--color-muted); text-decoration: underline; cursor: pointer; }
+/* Temu-style drop-down menus */
+.fsb-menu-wrap { position: relative; flex: 0 0 auto; }
+.fsb-caret { display: inline-block; transition: transform .15s; margin-left: 2px; }
+.fsb-caret.is-up { transform: rotate(180deg); }
+.fsb-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 35; list-style: none; margin: 0; padding: 6px 0; min-width: 200px; max-height: 320px; overflow-y: auto; background: var(--color-bg); border-radius: var(--radius-md); box-shadow: 0 6px 24px rgba(0,0,0,.16); }
+.fsb-menu button { display: flex; justify-content: space-between; gap: 12px; width: 100%; font: inherit; font-size: 14px; text-align: left; background: none; border: none; color: var(--color-text); padding: 8px 14px; cursor: pointer; white-space: nowrap; }
+.fsb-menu button:hover { background: var(--color-surface); }
+.fsb-menu li[aria-selected="true"] button { font-weight: 700; }
+/* Filters panel (slides in from the left, like Temu's) */
+.fsd-backdrop { position: fixed; inset: 0; z-index: 80; background: rgba(0,0,0,.45); }
+.fsd { position: absolute; top: 0; bottom: 0; left: 0; width: min(380px, 92vw); background: var(--color-bg); color: var(--color-text); display: flex; flex-direction: column; animation: fsd-in .2s ease-out; }
+@keyframes fsd-in { from { transform: translateX(-100%); } to { transform: none; } }
+.fsd-x { position: absolute; top: 16px; right: 16px; font: inherit; font-size: 22px; background: none; border: none; color: var(--color-text); cursor: pointer; }
+.fsd-title { margin: 22px 24px 8px; font-size: 22px; }
+.fsd-body { flex: 1; overflow-y: auto; padding: 0 24px 12px; }
+.fsd-body section { padding: 10px 0 6px; }
+.fsd-body h3 { font-size: 15px; font-weight: 600; margin: 0 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--color-border); }
+.fsd-opt { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 14px; cursor: pointer; }
+.fsd-opt input { width: 18px; height: 18px; accent-color: var(--color-text); }
+.fsd-foot { display: flex; gap: 12px; padding: 14px 24px; border-top: 1px solid var(--color-border); }
+.fsd-reset, .fsd-show { font: inherit; font-weight: 700; border-radius: 9999px; padding: 11px 20px; cursor: pointer; }
+.fsd-reset { background: var(--color-bg); color: var(--color-text); border: 1px solid var(--color-text); }
+.fsd-show { flex: 1; background: var(--color-accent); color: var(--color-accent-text); border: none; }
+[data-theme="wireframe"] .fsd-show { background: var(--color-text); color: var(--color-bg); }
