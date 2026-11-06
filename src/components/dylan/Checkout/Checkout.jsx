@@ -77,7 +77,7 @@ export function Checkout({ cart, taxRate, zip, budget = null, coupons = [], auto
       </div>
       {budget != null && t.overBudget > 0 && <div className="co-note">Budget {money(budget)} · you chose to go {money(t.overBudget)} over.</div>}
       {budget != null && t.overBudget <= 0 && <div className="co-note">Budget {money(budget)} · {money(-t.overBudget)} under.</div>}
-      {subtotal < 10 ? <Button disabled>$10 min. to place an order · add {money(10 - subtotal)} more</Button> : <Button onClick={() => onPlaceOrder({ lines: cart, totals: t, coupon: applied })}>Place order · {money(t.total)}</Button>}
+      <Button onClick={() => onPlaceOrder({ lines: cart, totals: t, coupon: applied })}>Place order · {money(t.total)}</Button>
       <div className="ui-muted" style={{ textAlign: "center" }}>Free first return within 90 days</div>
     </section>
   );

@@ -15,9 +15,6 @@ import "./Cart.css";
  * Lines are products with { qty, option, key } (src/lib/useCart.js). Quantity buttons, Remove with Undo,
  * and an empty state; every number updates as the cart changes.
  */
-/** Temu's real rule: orders need at least $10 of items ("$10 Min. to checkout" on temu.com's cart, Nov 5, 2026). */
-export const MIN_ORDER = 10;
-
 export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = null, showDeals = true, swaps = {}, catalog = {},
   lastRemoved = null, recommended = [], renderCard = null, onZipChange = () => {}, onQty = () => {}, onRemove = () => {}, onUndo = () => {},
   onCheckout = () => {}, onSwap = () => {}, onExpand = () => {}, onClose = () => {} }) {
@@ -116,9 +113,7 @@ export function Cart({ mode = "popout", cart, taxRate, zip, city = "", budget = 
           {swap ? ` The ${swap.to.short} ships from Temu for free.` : " Temu-shipped items ship free."}
         </div>
       )}
-      {t.subtotal < MIN_ORDER
-        ? <Button disabled>{money(MIN_ORDER).replace(".00", "")} min. to checkout · add {money(MIN_ORDER - t.subtotal)} more</Button>
-        : <Button onClick={onCheckout}>Checkout · {money(t.total)}</Button>}
+      <Button onClick={onCheckout}>Checkout · {money(t.total)}</Button>
       <div className="ui-muted cart-promise">Checkout won't add anything. Coupons only take money off.</div>
     </>
   );
