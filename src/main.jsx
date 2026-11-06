@@ -199,7 +199,7 @@ function App() {
       {quick && <QuickLook item={quick} showDeals={prefs.showDeals} onClose={() => setQuick(null)} onAdd={addToCart} onDetails={openItem} />}
       <OnboardingSplash open={splash} defaultZip={prefs.zip} defaultBudget={prefs.budget ?? ""}
         onDone={finishOnboarding} />
-      {couponOpen && <CouponPopup coupon={webDeal} onClaim={claim} onClose={() => setCouponOpen(false)} />}
+      {couponOpen && prefs.showDeals && <CouponPopup coupon={webDeal} onClaim={claim} onClose={() => setCouponOpen(false)} />}
     </div>
   );
 }

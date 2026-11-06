@@ -14,7 +14,7 @@ export function OnboardingSplash({ open = true, defaultZip = "", defaultBudget =
   const [showDeals, setShowDeals] = useState(defaultShowDeals);
   if (!open) return null;
   const finish = (skip) =>
-    onDone(skip ? { zip: "", budget: null, showDeals: true } : { zip, budget: budget === "" ? null : Number(budget), showDeals });
+    onDone(skip ? { zip: "", budget: null, showDeals } : { zip, budget: budget === "" ? null : Number(budget), showDeals });
   return (
     <div className="splash-backdrop" role="dialog" aria-modal="true" aria-labelledby="splash-title">
       <div className="splash">
