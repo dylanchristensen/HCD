@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RecentlyViewed } from "../RecentlyViewed/RecentlyViewed";
+import { SearchBox } from "./SearchBox";
 import { imageProps } from "../../../data/products";
 import "./NavBar.css";
 
@@ -13,9 +14,8 @@ import "./NavBar.css";
  * categories: [{ name, count, subs: [{ name, count, item }] }]  (CATEGORY_TREE in src/data/sample.js)
  * onCategory(name, sub?) opens a category, or one subcategory of it.
  */
-export function NavBar({ cartCount = 0, categories = [], recent = [], onSearch = () => {}, onCategory = () => {},
+export function NavBar({ cartCount = 0, categories = [], recent = [], search = {}, onSearch = () => {}, onCategory = () => {},
   onBestSellers = () => {}, onFiveStar = () => {}, onLocal = () => {}, onHome = () => {}, onOrders = () => {}, onOpenItem = () => {}, onCartClick = () => {} }) {
-  const [q, setQ] = useState("");
   const [menu, setMenu] = useState(null); // "categories" | "recent" | null
   const [hover, setHover] = useState(0);
   const toggle = (m) => setMenu(menu === m ? null : m);
@@ -66,10 +66,7 @@ export function NavBar({ cartCount = 0, categories = [], recent = [], onSearch =
           </div>
         </nav>
       <div className="nav-row2">
-        <form className="nav-search" onSubmit={(e) => { e.preventDefault(); onSearch(q); close(); }}>
-          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search Temu" aria-label="Search" />
-          <button type="submit" aria-label="Search">🔍</button>
-        </form>
+        <SearchBox {...search} onSearch={(t) => { onSearch(t); close(); }} />
         <div className="nav-menu-wrap">
           <button className="nav-icon-btn" aria-expanded={menu === "recent"} onClick={() => toggle("recent")} title="Recently viewed">
             🕘 <span>Recently<br />viewed</span>{recent.length > 0 && <span className="nav-badge">{recent.length}</span>}

@@ -11,7 +11,7 @@
 .nav-row2 { display: flex; align-items: center; gap: 12px; flex: 1 1 340px; min-width: 0; }
 .nav-logo { background: var(--color-accent) !important; color: var(--color-accent-text) !important; font-weight: 900 !important; font-size: 12px; letter-spacing: 0; padding: 0 !important; width: 48px; height: 48px; border-radius: 10px; flex: 0 0 48px; }
 .nav-links { display: flex; gap: 14px; align-items: center; font-size: 14px; font-weight: 600; white-space: nowrap; }
-.nav-search { flex: 1; display: flex; align-items: center; border: 2px solid var(--color-text); border-radius: 9999px; padding: 2px 2px 2px 14px; min-width: 140px; }
+.nav-search { position: relative; flex: 1; display: flex; align-items: center; border: 2px solid var(--color-text); border-radius: 9999px; padding: 2px 2px 2px 14px; min-width: 140px; }
 .nav-search input { flex: 1; border: none; outline: none; font: inherit; background: transparent; color: var(--color-text); padding: 8px 0; min-width: 0; }
 .nav-search button { background: var(--color-text) !important; color: var(--color-bg) !important; width: 36px; height: 36px; border-radius: 50%; }
 .nav-icon-btn { display: flex; align-items: center; gap: 6px; font-size: 12px !important; line-height: 1.2; text-align: left; position: relative; white-space: nowrap; }
@@ -51,3 +51,24 @@
 .nav-menu-head { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--color-muted); padding: 8px 10px 2px; }
 .nav-menu-note { font-size: 11px; color: var(--color-muted); padding: 6px 10px 2px; border-top: 1px solid var(--color-border); margin-top: 4px; }
 .nav-icon-btn b { font-weight: 700; }
+
+/* search suggestions, matched to temu.com */
+.nav-search .nav-search-clear { background: none !important; color: var(--color-muted) !important; width: 28px; height: 28px; font-size: 13px; }
+.nav-suggest { position: absolute; top: calc(100% + 12px); left: 12px; right: -40px; min-width: 420px; z-index: 45; background: var(--color-bg); color: var(--color-text); border-radius: var(--radius-md); box-shadow: 0 8px 30px rgba(0,0,0,.18); padding: 10px 0; max-height: 72vh; overflow-y: auto; }
+.nav-suggest::before { content: ""; position: absolute; top: -7px; left: 48%; width: 14px; height: 14px; background: var(--color-bg); transform: rotate(45deg); box-shadow: -2px -2px 4px rgba(0,0,0,.05); }
+.nav-suggest-list { list-style: none; margin: 0; padding: 0; }
+.nav-search .nav-suggest-list button { display: flex !important; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 8px 22px !important; font-size: 15px; font-weight: 400 !important; background: none !important; color: var(--color-text) !important; border-radius: 0 !important; height: auto !important; }
+.nav-search .nav-suggest-list button.is-on, .nav-search .nav-suggest-list button:hover { background: var(--color-surface) !important; }
+.nav-suggest-icon { font-size: 18px; line-height: 1; flex: none; }
+.nav-suggest-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-suggest-text b { font-weight: 700; }
+.nav-suggest-sec { padding: 6px 22px 10px; }
+.nav-suggest-head { font-size: 17px; font-weight: 600; margin: 4px 0 10px; display: flex; align-items: center; gap: 6px; }
+.nav-suggest-q { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--color-muted); color: var(--color-bg); font-size: 11px; font-weight: 700; cursor: help; }
+.nav-chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.nav-search .nav-chip { width: auto !important; min-width: 0; display: inline-flex !important; align-items: center; gap: 5px; background: var(--color-surface) !important; color: var(--color-text) !important; border-radius: 9999px !important; padding: 6px 14px !important; font-size: 14px; font-weight: 400 !important; height: auto !important; white-space: nowrap; }
+.nav-search .nav-chip:hover { background: #ececec !important; }
+.nav-chip-pic { width: 22px; height: 22px; border-radius: 50%; overflow: hidden; flex: none; margin-left: -6px; }
+.nav-chip-pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nav-chip-up { color: var(--color-accent); font-weight: 800; }
+.nav-search .nav-chip-more { width: auto !important; background: none !important; color: var(--color-muted) !important; font-size: 14px; height: auto !important; padding: 4px !important; }

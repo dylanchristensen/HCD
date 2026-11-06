@@ -1,4 +1,4 @@
-import { StrictMode, useState } from "react";
+import { StrictMode, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./theme/tokens.css";
 import "./shared/shared.css";
@@ -25,6 +25,11 @@ import { items, byId, swaps, coupons as demoCoupons, webDeal, CATEGORY_TREE, INT
  */
 const START = { zip: ZIP, budget: DEMO_BUDGET, showDeals: true };
 
+// Search suggestions: searches people run on Temu (incl. the ones our catalog was collected with), and popular ones.
+const SEARCH_TERMS = ["lashes", "laser", "laser pointer", "lash curler", "phone case", "phone case iphone", "t-shirt", "t-shirts for men", "laser level", "laser level green", "wrapping paper", "christmas wrapping paper", "christmas decorations", "halloween decorations", "kitchen gadgets", "wireless earbuds", "dog toys", "crochet kit", "throw blanket", "womens sweater", "mens hoodie", "makeup brushes", "earrings", "crossbody bag", "desk organizer", "car accessories", "water bottle", "kids toys", "slippers"];
+// Temu's own "Popular right now" list, as shown on temu.com on Nov 5, 2026.
+const POPULAR_SEARCHES = ["christmas wrapping paper rolls", "cheap girl stuff", "christmas decorations for home", "funny christmas wrapping paper", "sticker", "squishes", "weird stuff", "iphone cases", "journaling accessories", "halloween masks"];
+
 function App() {
   const [theme, setTheme] = useState("temu");
   const [prefs, setPrefs] = useState(START);
@@ -42,6 +47,7 @@ function App() {
   const [quick, setQuick] = useState(null);   // product shown in Quick look
   const [couponOpen, setCouponOpen] = useState(false);
   const [couponSeen, setCouponSeen] = useState(false);
+  const [recentSearches, setRecentSearches] = useState([]);
   const [backTo, setBackTo] = useState(null);  // the list page a product was opened from
 
   const go = (p) => { setPage(p); setPopout(false); window.scrollTo(0, 0); };
@@ -89,6 +95,16 @@ function App() {
     if (v.kind === "deals") return { title: v.type === "clearance" ? "↘ Clearance deals" : "⚡ Lightning deals", list: items.filter((i) => i.deal?.type === v.type) };
     return { title: "Recommended for you", list: items };
   })();
+  // Search suggestions: phrases people search on Temu (the searches our catalog came from), plus subcategories.
+  const searchProps = useMemo(() => {
+    const hay = (i) => `${i.name} ${i.category} ${i.sub ?? ""} ${i.query ?? ""}`.toLowerCase();
+    const finds = (t) => { const w = t.toLowerCase().split(/\s+/).filter(Boolean).map((x) => x.replace(/s$/, "")); return items.some((i) => w.every((x) => hay(i).includes(x))); };
+    const all = [...POPULAR_SEARCHES, ...SEARCH_TERMS, ...items.map((i) => i.query).filter(Boolean), ...CATEGORY_TREE.flatMap((c) => c.subs.filter((x) => x.count).map((x) => x.name.toLowerCase()))];
+    // Only suggest searches that find something in the demo store, so a suggestion never leads to an empty page.
+    return { searches: [...new Set(all)].filter(finds), popular: POPULAR_SEARCHES.filter(finds), items, placeholder: "wrapping paper christmas" };
+  }, []);
+  const searchWithRecent = { ...searchProps, recent: recentSearches };
+
   const popular = [...items].sort((a, b) => soldNum(b.sold) - soldNum(a.sold)).slice(0, 24);
   const shown = applyFilters(listing.empty ? popular : listing.list, filters);
 
@@ -111,7 +127,8 @@ function App() {
       </div>
 
       <NavBar cartCount={cart.count} categories={CATEGORY_TREE} recent={recent}
-        onSearch={(t) => show(t.trim() ? { kind: "search", text: t.trim() } : { kind: "home" })}
+        search={searchWithRecent}
+        onSearch={(t) => { const v = t.trim(); if (v) setRecentSearches((r) => [v, ...r.filter((x) => x.toLowerCase() !== v.toLowerCase())].slice(0, 5)); show(v ? { kind: "search", text: v } : { kind: "home" }); }}
         onCategory={(name, sub) => show({ kind: "category", name, sub })}
         onBestSellers={() => show({ kind: "best" })} onFiveStar={() => show({ kind: "five" })} onLocal={() => show({ kind: "local" })}
         onHome={() => show({ kind: "home" })} onOrders={() => { setJustPlaced(false); go("orders"); }} onOpenItem={openItem} onCartClick={() => setPopout(true)} />
