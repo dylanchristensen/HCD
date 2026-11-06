@@ -17,7 +17,7 @@ import { QuickLook } from "./components/site/QuickLook/QuickLook";
 import { useCart } from "./lib/useCart";
 import { taxForZip, isZip } from "./lib/tax";
 import { imageProps } from "./data/products";
-import { items, byId, cart as demoCart, swaps, coupons as demoCoupons, webDeal, CATEGORY_TREE, INTEREST_CHIPS, TAX_RATE, ZIP, CITY, DEMO_BUDGET } from "./data/sample";
+import { items, byId, swaps, coupons as demoCoupons, webDeal, CATEGORY_TREE, INTEREST_CHIPS, TAX_RATE, ZIP, CITY, DEMO_BUDGET } from "./data/sample";
 
 /**
  * The assembled site: everyone's screens wired together so we can click through the whole demo.
@@ -32,7 +32,7 @@ function App() {
   const [page, setPage] = useState("home");        // home | list | product | cart | checkout | orders
   const [view, setView] = useState({ kind: "home" }); // what the list page shows (see `listing` below)
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
-  const cart = useCart(byId, demoCart);           // the working cart (src/lib/useCart.js)
+  const cart = useCart(byId, []);                 // the working cart, empty on a first visit (src/lib/useCart.js)
   const [orders, setOrders] = useState([]);
   const [justPlaced, setJustPlaced] = useState(false);
   const [product, setProduct] = useState(byId["laser-green"]);

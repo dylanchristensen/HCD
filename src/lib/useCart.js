@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
  * The working cart, shared by the whole site (src/main.jsx).
  * A cart line is the product plus { qty, option, key }. `key` is product id + option, so the same
  * item in two colors is two lines, and adding the same item again just raises its quantity.
- * The cart is saved in the browser, so a refresh keeps it. "reset demo" puts the demo cart back.
+ * The cart is saved in the browser, so a refresh keeps it. "reset demo" empties it.
  *
  *   const cart = useCart(byId, demoCart);
  *   cart.lines, cart.count, cart.add(item, qty, option), cart.setQty(key, n), cart.remove(key),
  *   cart.undo(), cart.lastRemoved, cart.swap(fromId, toItem), cart.clear(), cart.reset()
  */
-const STORAGE_KEY = "temu-demo-cart-v1";
+const STORAGE_KEY = "temu-demo-cart-v2";
 const MAX_QTY = 99;
 
 const lineFor = (item, qty = 1, option = null) => ({ ...item, qty, option, key: option ? `${item.id}::${option}` : item.id });
