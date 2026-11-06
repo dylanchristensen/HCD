@@ -45,7 +45,7 @@ export const products = [
     klarna: { payments: 4, each: 2.65 },
     priceDetails: [
       { kind: "unique", text: "79% off the listed price of $53.05" },
-      { kind: "timed", text: "Clearance price", endsInSeconds: 12 * 3600 + 10 * 60 + 2 },
+      { kind: "timed", text: "Clearance price", endsAt: "Tue 12:10 pm" }, // a fixed end time, not a countdown (Nov 6, 2026)
       { kind: "lightning", text: "Only 12 left at this price" },
     ],
     options: { label: "Color", values: [{ name: "2-Line Yellow", available: true }, { name: "2-Line Green", available: false }, { name: "4-Line Green", available: false }] },

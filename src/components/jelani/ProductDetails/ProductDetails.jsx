@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../../shared";
 import { money, sellerShippingFor } from "../../../lib/price";
 import { imageProps } from "../../../data/products";
@@ -12,7 +12,8 @@ import "./ProductDetails.css";
  *  - "More details" chevrons open drop-down boxes; the up chevron closes them.
  *  - Large rating, because shoppers use stars as the important metric.
  *  - Large, simple price: no color means no sale, color means a sale or discount is applied.
- *  - Symbols communicate sale types without text; details live in a drop-down.
+ *  - Symbols communicate sale types without text; details live in a drop-down. A timed sale shows its
+ *    end time (the sketch's "Timed Sale 12:10:02"), not a ticking countdown, per the team on Nov 6, 2026.
  *  - Shipping says "Free", or lists the stipulation, or "Free with stipulation ⓘ" if it's too long.
  *  - The left column (gallery, seller, reviews) scrolls independently of the right.
  * From Jelani's report text (Nov 2026): a seller box with name, short overview, accolades (years on Temu,
@@ -111,7 +112,7 @@ export function ProductDetails({ item, showDeals = true, onAddToCart = () => {} 
             <Disclosure title={<span className="pd-price-details">Price details <SaleIcons details={d.priceDetails} /></span>}>
               <ul className="pd-price-list">
                 {d.priceDetails.map((p, i) => (
-                  <li key={i}><SaleIcon kind={p.kind} /> {p.text}{p.kind === "timed" && p.endsInSeconds && <> <Countdown seconds={p.endsInSeconds} /></>}</li>
+                  <li key={i}><SaleIcon kind={p.kind} /> {p.text}{p.endsAt && <>, ends <span className="pd-countdown">{p.endsAt}</span></>}</li>
                 ))}
               </ul>
             </Disclosure>
@@ -246,11 +247,4 @@ function SaleIcons({ details }) {
       ))}
     </span>
   );
-}
-
-function Countdown({ seconds }) {
-  const [left, setLeft] = useState(seconds);
-  useEffect(() => { const t = setInterval(() => setLeft((s) => Math.max(0, s - 1)), 1000); return () => clearInterval(t); }, []);
-  const hh = String(Math.floor(left / 3600)).padStart(2, "0"), mm = String(Math.floor((left % 3600) / 60)).padStart(2, "0"), ss = String(left % 60).padStart(2, "0");
-  return <span className="pd-countdown">{hh}:{mm}:{ss}</span>;
 }
